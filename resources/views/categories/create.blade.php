@@ -1,18 +1,4 @@
-<?php
-include '../config/database.php';
 
-if(isset($_POST['submit'])){
-
-    $name = $_POST['name'];
-    $description = $_POST['description'];
-
-    mysqli_query($conn,
-    "INSERT INTO categories(name,description)
-    VALUES('$name','$description')");
-
-    header('Location:index.php');
-}
-?>
 
 <!DOCTYPE html>
 <html>
@@ -53,35 +39,21 @@ body{
 Add Category
 </h2>
 
-<form method="POST">
+<form method="POST" action="{{ route('categories.store') }}">
+    @csrf
 
-<input
-type="text"
-name="name"
-class="form-control mb-3"
-placeholder="Category Name"
-required>
+    <input type="text" name="name" class="form-control mb-3 @error('name') is-invalid @enderror"
+           placeholder="Category Name" value="{{ old('name') }}" required>
+    @error('name')
+    <span class="invalid-feedback d-block">{{ $message }}</span>
+    @enderror
 
-<textarea
-name="description"
-class="form-control mb-3"
-placeholder="Description"></textarea>
+    <textarea name="description" class="form-control mb-3" placeholder="Description">{{ old('description') }}</textarea>
 
-<button
-name="submit"
-class="btn btn-primary">
-
-Save Category
-
-</button>
-
-<a href="index.php"
-class="btn btn-secondary">
-
-Back
-
-</a>
-
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Save Category</button>
+        <a href="{{ route('categories.index') }}" class="btn btn-secondary">Back</a>
+    </div>
 </form>
 
 </div>
