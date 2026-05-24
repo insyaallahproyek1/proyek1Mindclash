@@ -40,5 +40,5 @@ Route::post('/register',
 // LOGOUT
 // ======================
 
-Route::post('/logout',
+Route::get('/logout',
 [AuthController::class, 'logout']);

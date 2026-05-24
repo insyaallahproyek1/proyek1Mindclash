@@ -114,7 +114,7 @@ body{
             Achievement
         </a>
 
-        <a href="/auth/logout.php">
+        <a href="/logout">
              <i class="fa fa-right-from-bracket"></i>
              <i class="fa fa-right-from-bracket"></i>
              Logout
