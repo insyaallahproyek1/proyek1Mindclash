@@ -139,15 +139,3 @@
 
 </body>
 </html>
-
-<form method="POST">
-
-    <input type="text" name="username">
-
-    <input type="email" name="email">
-
-    <input type="password" name="password">
-
-    <button name="register">REGISTER</button>
-
-</form>

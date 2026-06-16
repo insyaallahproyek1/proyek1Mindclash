@@ -61,6 +61,16 @@ body{
     font-weight:bold;
 }
 
+.register-link{
+    text-align:center;
+    margin-top:20px;
+}
+
+.register-link a{
+    color:#a78bfa;
+    text-decoration:none;
+}
+
 </style>
 
 </head>
@@ -111,13 +121,18 @@ body{
         </div>
 
         <button
-            class="btn btn-primary w-100">
+            class="btn btn-primary w-100 btn-login">
 
             LOGIN
 
         </button>
 
     </form>
+
+    <div class="register-link">
+        Belum punya akun?
+        <a href="/register">Register</a>
+    </div>
 
 </div>
 
