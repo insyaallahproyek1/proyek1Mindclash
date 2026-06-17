@@ -1,26 +1,38 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
-# App\Http\Controllers\CategoryController;
-=======
-//use App\Http\Controllers\CategoryController;
->>>>>>> 83808ca220fd0c68de8060f210442b509ca91693
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return view('welcome');
+    // Jika user belum login, redirect ke halaman login
+    if (!auth()->check()) {
+        return redirect('/login');
+    }
+    
+    // Jika sudah login, cek role
+    if (auth()->user()->role === 'admin') {
+        return redirect('/dashboard');
+    }
+    
+    return redirect('/quiz-home');
 });
 
-<<<<<<< HEAD
-#Route::resource('categories', CategoryController::class);
-=======
-//Route::resource('categories', CategoryController::class);
->>>>>>> 83808ca220fd0c68de8060f210442b509ca91693
-Route::resource('questions', QuestionController::class);
-Route::get('/dashboard', [DashboardController::class, 'index']);
+// Admin Routes - Proteksi dengan middleware
+Route::middleware('auth')->group(function () {
+    Route::resource('questions', QuestionController::class);
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+});
+
+// User Quiz Routes - Proteksi dengan middleware
+Route::middleware('auth')->group(function () {
+    Route::get('/quiz-home', [UserController::class, 'home']);
+    Route::get('/quiz/{categoryId}', [UserController::class, 'showQuiz']);
+    Route::post('/quiz/submit', [UserController::class, 'submitQuiz']);
+    Route::get('/leaderboard', [UserController::class, 'leaderboard']);
+});
 
 // ======================
 // LOGIN

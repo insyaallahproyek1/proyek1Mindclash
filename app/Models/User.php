@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'class',
     ];
 
     /**
@@ -45,5 +47,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get all quiz results for this user.
+     */
+    public function quizResults()
+    {
+        return $this->hasMany(QuizResult::class);
     }
 }
