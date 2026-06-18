@@ -23,7 +23,15 @@ Route::get('/', function () {
 // Admin Routes - Proteksi dengan middleware
 Route::middleware('auth')->group(function () {
     Route::resource('questions', QuestionController::class);
+    Route::resource('categories', App\Http\Controllers\CategoryController::class);
+    Route::resource('users', App\Http\Controllers\AdminUserController::class);
     Route::get('/dashboard', [DashboardController::class, 'index']);
+    
+    // Fitur Admin Tambahan
+    Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index']);
+    Route::get('/reports/print', [App\Http\Controllers\ReportController::class, 'print']);
+    Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index']);
+    Route::post('/settings/profile', [App\Http\Controllers\SettingController::class, 'updateProfile']);
 });
 
 // User Quiz Routes - Proteksi dengan middleware

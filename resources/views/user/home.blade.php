@@ -196,6 +196,16 @@
 </div>
 
 <div class="container-main">
+    @if(session('error'))
+        <div class="alert alert-danger" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+            <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+        </div>
+    @endif
+    @if(session('success'))
+        <div class="alert alert-success" style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #86efac; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+        </div>
+    @endif
     <div class="welcome-section">
         <h1 class="welcome-title">Selamat Datang di MindClash!</h1>
         <p class="welcome-subtitle">Pilih kategori dan mulai kerjakan soal-soal untuk menguji kemampuanmu</p>

@@ -108,6 +108,15 @@
 
         <div class="mb-3">
             <input
+                type="text"
+                name="class"
+                class="form-control"
+                placeholder="Kelas (contoh: 7A)"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <input
                 type="password"
                 name="password"
                 class="form-control"
