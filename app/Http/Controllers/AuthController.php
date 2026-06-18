@@ -34,7 +34,13 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect('/dashboard');
+            // Redirect based on user role
+            $user = auth()->user();
+            if ($user && $user->role === 'admin') {
+                return redirect('/dashboard');
+            }
+
+            return redirect('/quiz-home');
         }
 
         return back()->with(
