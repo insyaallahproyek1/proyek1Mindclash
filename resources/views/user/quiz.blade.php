@@ -242,10 +242,14 @@
     <div class="quiz-header">
         <div class="category-title">{{ $category->name }}</div>
         <div class="progress-info">
-            <div class="progress-bar-custom">
-                <div class="progress-fill" style="width: {{ ($currentQuestion / $totalQuestions) * 100 }}%"></div>
+            <div class="timer">
+                <i class="fas fa-clock text-danger"></i>
+                <span class="timer-value" id="countdown">--:--</span>
             </div>
-            <span>{{ $currentQuestion }}/{{ $totalQuestions }}</span>
+            <div class="progress-bar-custom">
+                <div class="progress-fill" id="progressFill" style="width: {{ (1 / $totalQuestions) * 100 }}%"></div>
+            </div>
+            <span id="progressText">1/{{ $totalQuestions }}</span>
         </div>
     </div>
 
@@ -317,11 +321,43 @@
 <script>
     let currentQuestionIndex = 0;
     const totalQuestions = {{ $totalQuestions }};
+    
+    // Timer setup
+    let timeLimitMinutes = {{ $category->time_limit ?? 10 }};
+    let timeRemaining = timeLimitMinutes * 60;
+    const countdownEl = document.getElementById('countdown');
+
+    function updateTimer() {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        countdownEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert('Waktu Anda telah habis! Kuis akan otomatis dikirim.');
+            document.getElementById('quizForm').submit();
+        } else {
+            timeRemaining--;
+        }
+    }
+
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
+
+    function updateProgress() {
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const currentNum = currentQuestionIndex + 1;
+        
+        progressFill.style.width = `${(currentNum / totalQuestions) * 100}%`;
+        progressText.textContent = `${currentNum}/${totalQuestions}`;
+    }
 
     function showQuestion(index) {
         document.querySelectorAll('[id^="question-"]').forEach(el => el.style.display = 'none');
         document.getElementById('question-{{ $questions[0]->id }}').parentElement.querySelectorAll('[id^="question-"]')[index].style.display = 'block';
         currentQuestionIndex = index;
+        updateProgress();
     }
 
     function nextQuestion() {
@@ -331,6 +367,7 @@
             cards.forEach((card, idx) => {
                 card.style.display = idx === currentQuestionIndex ? 'block' : 'none';
             });
+            updateProgress();
         }
     }
 
@@ -341,6 +378,7 @@
             cards.forEach((card, idx) => {
                 card.style.display = idx === currentQuestionIndex ? 'block' : 'none';
             });
+            updateProgress();
         }
     }
 

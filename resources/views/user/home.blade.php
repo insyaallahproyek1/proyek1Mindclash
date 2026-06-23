@@ -4,6 +4,7 @@
     <title>MindClash - Quiz Game</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         * {
@@ -176,6 +177,140 @@
             padding: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid rgba(139, 92, 246, 0.2);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: #8b5cf6;
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            color: #8b5cf6;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dashboard-box {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .box-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #c4b5fd;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th {
+            text-align: left;
+            padding: 12px;
+            color: #a0aec0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .history-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .score-high {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .score-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .score-low {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .btn-review-link {
+            background: rgba(139, 92, 246, 0.2);
+            color: #c4b5fd;
+            border: 1px solid #8b5cf6;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-review-link:hover {
+            background: #8b5cf6;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -214,6 +349,83 @@
         </a>
     </div>
 
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+            <div class="stat-label">Total Kuis</div>
+            <div class="stat-value">{{ $totalQuizzes }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-percentage"></i></div>
+            <div class="stat-label">Rata-Rata Skor</div>
+            <div class="stat-value">{{ $avgScore }}%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-award"></i></div>
+            <div class="stat-label">Skor Tertinggi</div>
+            <div class="stat-value">{{ $highestScore }}%</div>
+        </div>
+    </div>
+
+    <!-- Dashboard Row (Chart & History) -->
+    <div class="dashboard-row">
+        <!-- History Table -->
+        <div class="dashboard-box">
+            <h3 class="box-title"><i class="fas fa-history"></i> Riwayat Kuis Terakhir</h3>
+            <div class="table-responsive">
+                @if($quizResults->isEmpty())
+                    <div style="text-align: center; color: #a0aec0; padding: 30px;">
+                        <i class="fas fa-info-circle" style="font-size: 28px; margin-bottom: 10px;"></i>
+                        <div>Belum ada kuis yang dikerjakan</div>
+                    </div>
+                @else
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Skor</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($quizResults->take(5) as $result)
+                            <tr>
+                                <td>{{ $result->category->name }}</td>
+                                <td>
+                                    <span class="score-badge {{ $result->score >= 80 ? 'score-high' : ($result->score >= 60 ? 'score-medium' : 'score-low') }}">
+                                        {{ $result->score }}%
+                                    </span>
+                                </td>
+                                <td>{{ $result->created_at->format('d/m/Y') }}</td>
+                                <td>
+                                    <a href="/quiz/review/{{ $result->id }}" class="btn-review-link">Review</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+            </div>
+        </div>
+
+        <!-- Progress Chart -->
+        <div class="dashboard-box">
+            <h3 class="box-title"><i class="fas fa-chart-line"></i> Perkembangan Nilaimu</h3>
+            @if($quizResults->isEmpty())
+                <div style="text-align: center; color: #a0aec0; padding: 30px;">
+                    <i class="fas fa-chart-line" style="font-size: 28px; margin-bottom: 10px;"></i>
+                    <div>Butuh minimal 1 kuis untuk grafik statistik</div>
+                </div>
+            @else
+                <canvas id="userScoreChart" style="max-height: 250px;"></canvas>
+            @endif
+        </div>
+    </div>
+
+    <h2 class="welcome-title text-center" style="font-size: 32px; margin: 50px 0 20px 0; background: none; -webkit-text-fill-color: initial; color: white;">Pilih Kategori Kuis</h2>
+
     <div class="categories-grid">
         @foreach($categories as $category)
         <a href="/quiz/{{ $category->id }}" class="category-card">
@@ -232,6 +444,67 @@
         <p>&copy; 2024 MindClash. Tingkatkan pengetahuanmu setiap hari!</p>
     </div>
 </div>
+
+@if(!$quizResults->isEmpty())
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById('userScoreChart').getContext('2d');
+        
+        const rawResults = {!! json_encode($quizResults->reverse()->values()) !!};
+        const dates = rawResults.map(item => {
+            const date = new Date(item.created_at);
+            return `${date.getDate()}/${date.getMonth() + 1}`;
+        });
+        const scores = rawResults.map(item => item.score);
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Skor Kuis (%)',
+                    data: scores,
+                    borderColor: '#8b5cf6',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#06b6d4',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#a0aec0'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#a0aec0'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+@endif
 
 </body>
 </html>

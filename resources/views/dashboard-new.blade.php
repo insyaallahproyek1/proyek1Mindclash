@@ -431,12 +431,25 @@
     </div>
 
     <!-- Chart Section -->
-    <div class="chart-container">
-        <h3 class="section-title">
-            <i class="fas fa-chart-bar"></i>
-            Statistik Soal Per Kategori
-        </h3>
-        <canvas id="categoriesChart" style="max-height: 300px;"></canvas>
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="chart-container" style="height: 100%;">
+                <h3 class="section-title" style="margin-top: 0;">
+                    <i class="fas fa-chart-bar"></i>
+                    Statistik Soal Per Kategori
+                </h3>
+                <canvas id="categoriesChart" style="max-height: 250px;"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="chart-container" style="height: 100%;">
+                <h3 class="section-title" style="margin-top: 0;">
+                    <i class="fas fa-chart-line"></i>
+                    Rata-rata Skor Siswa Per Kategori
+                </h3>
+                <canvas id="scoresChart" style="max-height: 250px;"></canvas>
+            </div>
+        </div>
     </div>
 
     <!-- Categories Table -->
@@ -566,6 +579,62 @@ if (ctx) {
             scales: {
                 y: {
                     beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    },
+                    ticks: {
+                        color: '#a0aec0'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    },
+                    ticks: {
+                        color: '#a0aec0'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Chart untuk Rata-rata Skor Per Kategori
+const ctxScores = document.getElementById('scoresChart');
+if (ctxScores) {
+    const categories = {!! json_encode($categories->pluck('name') ?? []) !!};
+    const avgScores = {!! json_encode($categories->pluck('avg_score') ?? []) !!};
+
+    new Chart(ctxScores, {
+        type: 'line',
+        data: {
+            labels: categories,
+            datasets: [{
+                label: 'Rata-rata Skor (%)',
+                data: avgScores,
+                backgroundColor: 'rgba(6, 182, 212, 0.2)',
+                borderColor: 'rgba(6, 182, 212, 1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#8b5cf6',
+                pointRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#cbd5e1'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
                     grid: {
                         color: 'rgba(255, 255, 255, 0.05)'
                     },

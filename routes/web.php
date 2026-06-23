@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz/{categoryId}', [UserController::class, 'showQuiz']);
     Route::post('/quiz/submit', [UserController::class, 'submitQuiz']);
     Route::get('/leaderboard', [UserController::class, 'leaderboard']);
+    Route::get('/quiz/review/{resultId}', [UserController::class, 'showReview']);
 });
 
 // ======================

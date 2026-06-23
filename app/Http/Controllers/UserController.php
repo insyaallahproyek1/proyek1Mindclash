@@ -15,7 +15,16 @@ class UserController extends Controller
     public function home()
     {
         $categories = Category::with('questions')->get();
-        return view('user.home', compact('categories'));
+        $quizResults = QuizResult::where('user_id', auth()->id())
+            ->with('category')
+            ->latest()
+            ->get();
+
+        $totalQuizzes = $quizResults->count();
+        $avgScore = $totalQuizzes > 0 ? round($quizResults->avg('score'), 1) : 0;
+        $highestScore = $totalQuizzes > 0 ? $quizResults->max('score') : 0;
+
+        return view('user.home', compact('categories', 'quizResults', 'totalQuizzes', 'avgScore', 'highestScore'));
     }
 
     /**
@@ -25,6 +34,7 @@ class UserController extends Controller
     {
         $category = Category::findOrFail($categoryId);
         $questions = Question::where('category_id', $categoryId)
+            ->inRandomOrder() // Acak soal
             ->get();
 
         if ($questions->isEmpty()) {
@@ -69,6 +79,7 @@ class UserController extends Controller
             'total_questions' => $totalQuestions,
             'correct_answers' => $correctAnswers,
             'score' => $score,
+            'answers' => $answers,
         ]);
 
         return view('user.result', compact(
@@ -80,6 +91,28 @@ class UserController extends Controller
             'score',
             'answers'
         ));
+    }
+
+    /**
+     * Show detailed review of a quiz result
+     */
+    public function showReview($resultId)
+    {
+        $result = QuizResult::with('category')->findOrFail($resultId);
+
+        // Pastikan user mengakses hasil kuisnya sendiri
+        if ($result->user_id !== auth()->id() && auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $category = $result->category;
+        $questions = Question::where('category_id', $result->category_id)->get();
+        $answers = $result->answers ?? [];
+        $correctAnswers = $result->correct_answers;
+        $totalQuestions = $result->total_questions;
+        $score = $result->score;
+
+        return view('user.review', compact('result', 'category', 'questions', 'answers', 'correctAnswers', 'totalQuestions', 'score'));
     }
 
     /**
