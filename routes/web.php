@@ -41,6 +41,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/quiz/submit', [UserController::class, 'submitQuiz']);
     Route::get('/leaderboard', [UserController::class, 'leaderboard']);
     Route::get('/quiz/review/{resultId}', [UserController::class, 'showReview']);
+
+    // ======================
+    // ROOM MULTIPLAYER
+    // ======================
+    Route::get('/rooms', [\App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
+    Route::post('/rooms/create', [\App\Http\Controllers\RoomController::class, 'create'])->name('rooms.create');
+    Route::post('/rooms/join', [\App\Http\Controllers\RoomController::class, 'join'])->name('rooms.join');
+    Route::get('/rooms/{code}', [\App\Http\Controllers\RoomController::class, 'lobby'])->name('rooms.lobby');
+    Route::get('/rooms/{code}/members', [\App\Http\Controllers\RoomController::class, 'members'])->name('rooms.members');
+    Route::post('/rooms/{code}/start', [\App\Http\Controllers\RoomController::class, 'start'])->name('rooms.start');
+    Route::get('/rooms/{code}/quiz', [\App\Http\Controllers\RoomController::class, 'quiz'])->name('rooms.quiz');
+    Route::post('/rooms/{code}/submit', [\App\Http\Controllers\RoomController::class, 'submit'])->name('rooms.submit');
+    Route::get('/rooms/{code}/leaderboard', [\App\Http\Controllers\RoomController::class, 'leaderboard'])->name('rooms.leaderboard');
+    Route::post('/rooms/{code}/finish', [\App\Http\Controllers\RoomController::class, 'finish'])->name('rooms.finish');
 });
 
 // ======================
@@ -71,3 +85,5 @@ Route::post('/register',
 
 Route::get('/logout',
 [AuthController::class, 'logout']);
+
+

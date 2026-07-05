@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz - {{ $category->name }}</title>
+    <title>Kuis Room: {{ $room->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -28,24 +28,30 @@
         }
 
         .quiz-header {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(139, 92, 246, 0.2);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .category-title {
-            font-size: 28px;
+            font-size: 20px;
             font-weight: bold;
-            color: #8b5cf6;
+            color: #c4b5fd;
         }
 
         .progress-info {
             display: flex;
-            gap: 30px;
             align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         .timer {
@@ -220,29 +226,34 @@
         }
 
         .back-link {
-            color: #8b5cf6;
+            color: #ef4444;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 20px;
             transition: all 0.3s;
+            font-weight: 600;
         }
 
         .back-link:hover {
             gap: 12px;
+            color: #f87171;
         }
     </style>
 </head>
 <body>
 
 <div class="quiz-container">
-    <a href="/quiz-home" class="back-link">
-        <i class="fas fa-arrow-left"></i> Kembali
+    <a href="#" class="back-link" id="btnLeaveQuiz">
+        <i class="fas fa-sign-out-alt"></i> Keluar Room Kuis
     </a>
 
     <div class="quiz-header">
-        <div class="category-title">{{ $category->name }}</div>
+        <div>
+            <div class="category-title">{{ $category->name }}</div>
+            <div style="font-size: 12px; color: #94a3b8;">Room: <strong>{{ $room->name }}</strong></div>
+        </div>
         <div class="progress-info">
             <div class="timer">
                 <i class="fas fa-clock text-danger"></i>
@@ -255,9 +266,8 @@
         </div>
     </div>
 
-    <form id="quizForm" method="POST" action="/quiz/submit">
+    <form id="quizForm" method="POST" action="{{ route('rooms.submit', $room->code) }}">
         @csrf
-        <input type="hidden" name="category_id" value="{{ $category->id }}">
         
         @php $qNumber = 1; @endphp
         @foreach($questions as $index => $question)
@@ -306,7 +316,7 @@
 
                 @if($index == $totalQuestions - 1)
                     <button type="submit" class="btn-submit">
-                        <i class="fas fa-check"></i> Selesai & Lihat Hasil
+                        <i class="fas fa-check"></i> Selesai & Kirim Jawaban
                     </button>
                 @else
                     <button type="button" class="btn-next" onclick="nextQuestion()">
@@ -324,7 +334,7 @@
     let currentQuestionIndex = 0;
     const totalQuestions = {{ $totalQuestions }};
     
-    // Timer setup
+    // Timer setup (defaults to 10 minutes if not specified)
     let timeLimitMinutes = {{ $category->time_limit ?? 10 }};
     let timeRemaining = timeLimitMinutes * 60;
     const countdownEl = document.getElementById('countdown');
@@ -336,7 +346,7 @@
         
         if (timeRemaining <= 0) {
             clearInterval(timerInterval);
-            alert('Waktu Anda telah habis! Kuis akan otomatis dikirim.');
+            alert('Waktu Anda telah habis! Jawaban Anda akan otomatis dikirim.');
             document.getElementById('quizForm').submit();
         } else {
             timeRemaining--;
@@ -353,13 +363,6 @@
         
         progressFill.style.width = `${(currentNum / totalQuestions) * 100}%`;
         progressText.textContent = `${currentNum}/${totalQuestions}`;
-    }
-
-    function showQuestion(index) {
-        document.querySelectorAll('[id^="question-"]').forEach(el => el.style.display = 'none');
-        document.getElementById('question-{{ $questions[0]->id }}').parentElement.querySelectorAll('[id^="question-"]')[index].style.display = 'block';
-        currentQuestionIndex = index;
-        updateProgress();
     }
 
     function nextQuestion() {
@@ -391,6 +394,14 @@
         });
         optionItem.classList.add('selected');
     }
+
+    // Leave confirmation
+    document.getElementById('btnLeaveQuiz').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('Apakah Anda yakin ingin keluar? Progres kuis Anda di room ini tidak akan tersimpan.')) {
+            window.location.href = "{{ route('rooms.index') }}";
+        }
+    });
 </script>
 
 </body>

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register MindClash</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -84,6 +86,16 @@
         Create Your Account
     </div>
 
+    @if($errors->any())
+        <div class="alert alert-danger mb-3 py-2 px-3" style="font-size: 14px; border-radius: 12px;">
+            <ul class="mb-0 ps-3">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="POST" action="/register">
 
     @csrf
@@ -94,6 +106,7 @@
                 name="name"
                 class="form-control"
                 placeholder="Username"
+                value="{{ old('name') }}"
                 required>
         </div>
 
@@ -103,6 +116,7 @@
                 name="email"
                 class="form-control"
                 placeholder="Email"
+                value="{{ old('email') }}"
                 required>
         </div>
 
@@ -112,6 +126,7 @@
                 name="class"
                 class="form-control"
                 placeholder="Kelas (contoh: 7A)"
+                value="{{ old('class') }}"
                 required>
         </div>
 

@@ -1,396 +1,202 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard Admin - MindClash</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+@extends('layouts.admin')
 
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-        }
+@section('page_title', 'Dashboard Admin - MindClash')
 
-        .sidebar {
-            width: 260px;
-            height: 100vh;
-            background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
-            position: fixed;
-            padding: 30px 20px;
-            border-right: 1px solid rgba(139, 92, 246, 0.2);
-            overflow-y: auto;
-        }
+@section('title')
+    <i class="fas fa-tachometer-alt"></i> Dashboard Admin
+@endsection
 
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 40px;
-            color: #8b5cf6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+@push('styles')
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
 
-        .menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            text-decoration: none;
-            color: #cbd5e1;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-        }
+    .stat-card {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border-radius: 15px;
+        padding: 25px;
+        border: 2px solid rgba(139, 92, 246, 0.2);
+        transition: all 0.3s;
+    }
 
-        .menu a:hover {
-            background: rgba(139, 92, 246, 0.2);
-            color: #8b5cf6;
-            border-left-color: #8b5cf6;
-        }
+    .stat-card:hover {
+        border-color: #8b5cf6;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+    }
 
-        .menu a.active {
-            background: rgba(139, 92, 246, 0.3);
-            color: #c4b5fd;
-            border-left-color: #8b5cf6;
-        }
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
 
-        .content {
-            margin-left: 280px;
-            padding: 30px;
-            min-height: 100vh;
-        }
+    .stat-icon.users {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+    }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid rgba(139, 92, 246, 0.2);
-        }
+    .stat-icon.questions {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+    }
 
-        .title {
-            font-size: 32px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .stat-icon.categories {
+        background: rgba(168, 85, 247, 0.2);
+        color: #a855f7;
+    }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+    .stat-icon.scores {
+        background: rgba(245, 158, 11, 0.2);
+        color: #f59e0b;
+    }
 
-        .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-        }
+    .stat-label {
+        color: #a0aec0;
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
+    .stat-value {
+        font-size: 32px;
+        font-weight: bold;
+        color: white;
+    }
 
-        .stat-card {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 15px;
-            padding: 25px;
-            border: 2px solid rgba(139, 92, 246, 0.2);
-            transition: all 0.3s;
-        }
+    .stat-change {
+        font-size: 12px;
+        margin-top: 10px;
+        color: #10b981;
+    }
 
-        .stat-card:hover {
-            border-color: #8b5cf6;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
-        }
+    .table-container {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border-radius: 15px;
+        border: 2px solid rgba(139, 92, 246, 0.2);
+        overflow-x: auto;
+        margin-bottom: 40px;
+    }
 
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-        .stat-icon.users {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
-        }
+    thead {
+        background: rgba(139, 92, 246, 0.1);
+        border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+    }
 
-        .stat-icon.questions {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-        }
+    th {
+        padding: 20px;
+        text-align: left;
+        color: #c4b5fd;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 12px;
+        white-space: nowrap;
+    }
 
-        .stat-icon.categories {
-            background: rgba(168, 85, 247, 0.2);
-            color: #a855f7;
-        }
+    td {
+        padding: 18px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #e2e8f0;
+        white-space: nowrap;
+    }
 
-        .stat-icon.scores {
-            background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-        }
+    tbody tr:hover {
+        background: rgba(139, 92, 246, 0.1);
+    }
 
-        .stat-label {
-            color: #a0aec0;
-            font-size: 12px;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
+    .badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
 
-        .stat-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: white;
-        }
+    .badge.category {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+    }
 
-        .stat-change {
-            font-size: 12px;
-            margin-top: 10px;
-            color: #10b981;
-        }
+    .badge.online {
+        background: rgba(16, 185, 129, 0.2);
+        color: #86efac;
+    }
 
-        .section-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin: 40px 0 25px 0;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .btn-action {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 8px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: white;
+        display: inline-block;
+    }
 
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 28px;
-            background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
-            border-radius: 2px;
-        }
+    .btn-edit {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+    }
 
-        .table-container {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 15px;
-            border: 2px solid rgba(139, 92, 246, 0.2);
-            overflow: hidden;
-            margin-bottom: 40px;
-        }
+    .btn-edit:hover {
+        background: #3b82f6;
+        color: white;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+    }
 
-        thead {
-            background: rgba(139, 92, 246, 0.1);
-            border-bottom: 2px solid rgba(139, 92, 246, 0.3);
-        }
+    .btn-delete:hover {
+        background: #ef4444;
+        color: white;
+    }
 
-        th {
-            padding: 20px;
-            text-align: left;
-            color: #c4b5fd;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 12px;
-        }
+    .btn-primary {
+        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: bold;
+    }
 
-        td {
-            padding: 18px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: #e2e8f0;
-        }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+    }
 
-        tbody tr:hover {
-            background: rgba(139, 92, 246, 0.1);
-        }
+    .chart-container {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border-radius: 15px;
+        border: 2px solid rgba(139, 92, 246, 0.2);
+        padding: 25px;
+        margin-bottom: 40px;
+    }
+</style>
+@endpush
 
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .badge.category {
-            background: rgba(59, 130, 246, 0.2);
-            color: #93c5fd;
-        }
-
-        .badge.online {
-            background: rgba(16, 185, 129, 0.2);
-            color: #86efac;
-        }
-
-        .btn-action {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: white;
-            display: inline-block;
-        }
-
-        .btn-edit {
-            background: rgba(59, 130, 246, 0.2);
-            color: #93c5fd;
-        }
-
-        .btn-edit:hover {
-            background: #3b82f6;
-        }
-
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-        }
-
-        .btn-delete:hover {
-            background: #ef4444;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
-        }
-
-        .logout-btn {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
-        }
-
-        .chart-container {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 15px;
-            border: 2px solid rgba(139, 92, 246, 0.2);
-            padding: 25px;
-            margin-bottom: 40px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #a0aec0;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-    </style>
-</head>
-<body>
-
-<div class="sidebar">
-    <div class="logo">
-        <i class="fas fa-brain"></i>
-        MindClash
-    </div>
-
-    <div class="menu">
-        <a href="/dashboard" class="active">
-            <i class="fas fa-chart-line"></i>
-            Dashboard
-        </a>
-        <a href="/questions">
-            <i class="fas fa-question-circle"></i>
-            Soal
-        </a>
-        <a href="/categories">
-            <i class="fas fa-layer-group"></i>
-            Kategori
-        </a>
-        <a href="/users">
-            <i class="fas fa-users"></i>
-            Pengguna
-        </a>
-        <a href="/reports">
-            <i class="fas fa-file-alt"></i>
-            Laporan
-        </a>
-        <a href="/settings">
-            <i class="fas fa-cog"></i>
-            Pengaturan
-        </a>
-        <a href="/logout" style="margin-top: 40px; color: #ef4444;">
-            <i class="fas fa-sign-out-alt"></i>
-            Logout
-        </a>
-    </div>
-</div>
-
-<div class="content">
-    <div class="header">
-        <h1 class="title">
-            <i class="fas fa-tachometer-alt"></i>
-            Dashboard Admin
-        </h1>
-        <div class="user-info">
-            <div class="avatar">A</div>
-            <div>
-                <div style="font-weight: bold;">Admin MindClash</div>
-                <div style="font-size: 12px; color: #a0aec0;">Diperbarui: 17 Juni 2024</div>
-            </div>
-        </div>
-    </div>
-
+@section('content')
     <!-- Statistics Cards -->
     <div class="stats-grid">
         <div class="stat-card">
@@ -430,19 +236,19 @@
         </div>
     </div>
 
-    <!-- Chart Section -->
+    <!-- Charts Section -->
     <div class="row">
         <div class="col-lg-6 mb-4">
-            <div class="chart-container" style="height: 100%;">
+            <div class="chart-container">
                 <h3 class="section-title" style="margin-top: 0;">
                     <i class="fas fa-chart-bar"></i>
-                    Statistik Soal Per Kategori
+                    Jumlah Soal Per Kategori
                 </h3>
                 <canvas id="categoriesChart" style="max-height: 250px;"></canvas>
             </div>
         </div>
         <div class="col-lg-6 mb-4">
-            <div class="chart-container" style="height: 100%;">
+            <div class="chart-container">
                 <h3 class="section-title" style="margin-top: 0;">
                     <i class="fas fa-chart-line"></i>
                     Rata-rata Skor Siswa Per Kategori
@@ -525,9 +331,9 @@
             </tbody>
         </table>
     </div>
+@endsection
 
-</div>
-
+@push('scripts')
 <script>
 // Chart untuk Kategori Soal
 const ctx = document.getElementById('categoriesChart');
@@ -655,6 +461,4 @@ if (ctxScores) {
     });
 }
 </script>
-
-</body>
-</html>
+@endpush

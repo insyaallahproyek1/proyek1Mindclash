@@ -64,14 +64,35 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'class' => $request->class,
-            'password' => Hash::make($request->password)
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'class' => 'required|string|max:50',
+            'password' => 'required|string|min:6',
+        ], [
+            'name.required' => 'Nama wajib diisi.',
+            'name.string' => 'Nama harus berupa teks.',
+            'name.max' => 'Nama maksimal 255 karakter.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email maksimal 255 karakter.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'class.required' => 'Kelas wajib diisi.',
+            'class.string' => 'Kelas harus berupa teks.',
+            'class.max' => 'Kelas maksimal 50 karakter.',
+            'password.required' => 'Password wajib diisi.',
+            'password.string' => 'Password harus berupa teks.',
+            'password.min' => 'Password minimal terdiri dari 6 karakter.',
         ]);
 
-        return redirect('/login');
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'class' => $validated['class'],
+            'password' => Hash::make($validated['password'])
+        ]);
+
+        return redirect('/login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
     // ======================

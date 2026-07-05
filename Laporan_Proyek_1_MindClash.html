@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Proyek 1 - MindClash</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'dark' });</script>
+    <style>
+        :root {
+            --primary: #000000;
+            --primary-light: #222222;
+            --primary-dark: #000000;
+            --secondary: #444444;
+            --dark-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-main: #000000;
+            --text-muted: #555555;
+            --border-color: #000000;
+        }
+
+        /* General styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+            padding: 0;
+        }
+
+        .document-container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 0;
+        }
+
+        /* A4 Page layout and margins */
+        @page {
+            size: A4;
+            margin: 30mm 30mm 30mm 40mm; /* Top, Right, Bottom: 3cm, Left: 4cm */
+        }
+
+        @media print {
+            body {
+                background-color: #ffffff;
+                color: #000000;
+                padding: 0;
+            }
+            .document-container {
+                box-shadow: none;
+                max-width: 100%;
+                margin: 0;
+                background: #ffffff;
+                border: none;
+                border-radius: 0;
+            }
+            .page-break {
+                page-break-after: always;
+                clear: both;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                color: #000000 !important;
+                page-break-after: avoid;
+            }
+            p, table, li {
+                color: #000000 !important;
+            }
+            .card, .stat-box {
+                border: 1px solid #000000 !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+        }
+
+        .page-break {
+            padding: 20mm 20mm 20mm 20mm;
+            min-height: 250mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            page-break-after: always;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Times New Roman', Times, serif;
+            color: #000000;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            margin-top: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-top: 25px;
+            padding-bottom: 0;
+            border-bottom: none;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        p {
+            margin-bottom: 12px;
+            color: #000000;
+            text-align: justify;
+            text-indent: 10mm; /* Standard academic indent */
+        }
+
+        p.no-indent, .signature-area p, .cover-page p, .sign-box p, .toc-item p {
+            text-indent: 0 !important;
+        }
+
+        ol, ul {
+            margin-bottom: 20px;
+            margin-left: 25px;
+            color: #000000;
+        }
+
+        li {
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+
+        /* Cover Page styling */
+        .cover-page {
+            background: #ffffff;
+            padding: 30mm 20mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            min-height: 250mm;
+        }
+
+        .logo-section {
+            margin-top: 10px;
+        }
+
+        .logo-section i {
+            font-size: 70px;
+            color: #000000 !important;
+            margin-bottom: 15px;
+        }
+
+        .ulbi-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000000;
+            text-transform: uppercase;
+        }
+
+        .ulbi-subtitle {
+            font-size: 14px;
+            color: #333333;
+            text-transform: uppercase;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        .main-title-section {
+            margin: 40px 0;
+        }
+
+        .doc-tag {
+            font-size: 15px;
+            font-weight: bold;
+            color: #000000;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .app-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #000000;
+            text-transform: uppercase;
+        }
+
+        .app-subtitle {
+            font-size: 13px;
+            color: #333333;
+            margin-top: 10px;
+            font-weight: normal;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cover-details-card {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 30px;
+            text-align: left;
+            border: none;
+            padding: 0;
+            background: none;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 180px 20px 1fr;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .detail-colon {
+            color: #000000;
+        }
+
+        .detail-val {
+            color: #000000;
+        }
+
+        .cover-footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #333333;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-top: 1px solid #000000;
+            width: 100%;
+            padding-top: 15px;
+        }
+
+        /* Kata Pengantar Page */
+        .signature-area {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        /* Tables & Forms */
+        table.form-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        table.form-table th, table.form-table td {
+            border: 1px solid #000000;
+            padding: 8px 12px;
+        }
+
+        table.form-table th {
+            background-color: #f3f4f6;
+            color: #000000;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        table.form-table td {
+            color: #000000;
+        }
+
+        .sign-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .sign-box {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .sign-space {
+            height: 80px;
+        }
+
+        .sign-name {
+            font-weight: bold;
+            text-decoration: underline;
+            color: #000000;
+        }
+
+        /* Daftar Isi styling */
+        .toc-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .toc-title {
+            background: #ffffff;
+            padding-right: 5px;
+            z-index: 1;
+            font-weight: bold;
+        }
+
+        .toc-dots {
+            flex-grow: 1;
+            border-bottom: 1px dotted #000000;
+            margin: 0 10px 4px 10px;
+            height: 1px;
+        }
+
+        .toc-page {
+            background: #ffffff;
+            padding-left: 5px;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .toc-subitem {
+            margin-left: 25px;
+            font-size: 14px;
+        }
+
+        .toc-subitem .toc-title {
+            font-weight: normal;
+        }
+
+        /* Box layouts */
+        .card {
+            background: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 0;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .stat-box {
+            background: #f9fafb;
+            border: 1px solid #000000;
+            border-radius: 0;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 22px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .stat-lbl {
+            font-size: 10px;
+            color: #555555;
+            text-transform: uppercase;
+        }
+
+        .badge-purple {
+            background: #f3f4f6;
+            color: #000000;
+            border: 1px solid #000000;
+            border-radius: 0;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* Block diagrams represented by HTML to look clean */
+        .diagram-block {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .diagram-node {
+            background: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 0;
+            padding: 10px 20px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 250px;
+        }
+
+        .diagram-node.secondary {
+            border-color: #000000;
+        }
+
+        .diagram-arrow {
+            color: #000000;
+            font-size: 18px;
+        }
+
+        .diagram-row-flex {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 15px;
+        }
+
+        /* Folder tree styling */
+        .folder-tree {
+            font-family: 'Courier New', Courier, monospace;
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 0;
+            border: 1px solid #000000;
+            font-size: 13px;
+            color: #000000;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .folder-tree span.comment {
+            color: #555555;
+        }
+
+        .folder-tree span.file {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        /* Images and figures */
+        img {
+            max-width: 100%;
+            border: 1px solid #000000;
+            border-radius: 0;
+            margin-bottom: 20px;
+            box-shadow: none !important;
+        }
+
+        /* Bibliography formatting (Hanging Indent) */
+        .references-list p {
+            text-indent: -30px !important;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+
+    <!-- COVER PAGE -->
+    <div class="page-break cover-page" style="padding: 15mm; min-height: 297mm; display: flex; flex-direction: column; justify-content: space-between; position: relative; background: #ffffff;">
+        
+        <!-- ULBI Logo Header -->
+        <div style="display: flex; align-items: center; justify-content: flex-start; width: 100%; margin-top: 10px; z-index: 10;">
+            <svg width="50" height="50" viewBox="0 0 120 120" style="margin-right: 12px; flex-shrink: 0;">
+                <!-- central hexagon -->
+                <polygon points="60,48 70,54 70,66 60,72 50,66 50,54" fill="#f97316"/>
+                <!-- 6 surrounding hexagons -->
+                <polygon points="60,20 70,26 70,38 60,44 50,38 50,26" fill="#f97316"/>
+                <polygon points="60,76 70,82 70,94 60,100 50,94 50,82" fill="#f97316"/>
+                <polygon points="84,34 94,40 94,52 84,58 74,52 74,40" fill="#f97316"/>
+                <polygon points="84,62 94,68 94,80 84,86 74,80 74,68" fill="#f97316"/>
+                <polygon points="36,34 46,40 46,52 36,58 26,52 26,40" fill="#f97316"/>
+                <polygon points="36,62 46,68 46,80 36,86 26,80 26,68" fill="#f97316"/>
+            </svg>
+            <div>
+                <div style="font-family: Arial, sans-serif; font-size: 26px; font-weight: 800; color: #1e3a8a; line-height: 1; letter-spacing: 1px;">ULBI</div>
+                <div style="font-size: 9px; font-weight: 800; color: #ef4444; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px;">Universitas Logistik & Bisnis Internasional</div>
+            </div>
+        </div>
+
+        <!-- Title block & Metadata Card -->
+        <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; align-items: flex-start; margin-top: 30px; z-index: 10; flex-grow: 1;">
+            
+            <!-- Left side Title & Metadata -->
+            <div style="display: flex; flex-direction: column; width: 50%; text-align: left;">
+                
+                <div style="font-size: 44px; font-weight: 900; color: #0f172a; text-transform: uppercase; line-height: 1.05; letter-spacing: -1px; font-family: Arial, sans-serif;">
+                    Dokumen<br>Aplikasi
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <div style="background-color: #047857; color: #ffffff; padding: 5px 22px; border-radius: 50px; display: inline-block; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; font-family: Arial, sans-serif;">Proyek 1</div>
+                </div>
+
+                <div style="display: flex; align-items: center; margin-top: 30px;">
+                    <svg width="45" height="45" viewBox="0 0 100 100" style="margin-right: 15px; flex-shrink: 0;">
+                        <path d="M50 10 L80 25 V55 C80 75 50 90 50 90 C50 90 20 75 20 55 V25 L50 10 Z" fill="#047857"/>
+                        <path d="M50 25 C40 25 35 32 35 40 C35 48 42 48 42 55 C42 60 38 65 45 65 C48 65 50 62 50 60 C50 62 52 65 55 65 C62 65 58 60 58 55 C58 48 65 48 65 40 C65 32 60 25 50 25 Z" fill="#ffffff"/>
+                        <path d="M50 35 L42 50 H50 L48 62 L58 47 H50 L52 35 Z" fill="#fbcfe8"/>
+                    </svg>
+                    <span style="font-family: Arial, sans-serif; font-size: 42px; font-weight: 900; color: #047857; letter-spacing: -1px; line-height: 1;">MindClash</span>
+                </div>
+
+                <div style="font-size: 11px; font-weight: bold; color: #4b5563; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; max-width: 320px; line-height: 1.4; font-family: Arial, sans-serif;">
+                    Solusi Pembelajaran Interaktif Masa Kini Melalui Pendekatan Gamifikasi Intensif
+                </div>
+
+                <!-- Gray Metadata Card -->
+                <div style="background: #f4f6f8; border-left: 5px solid #047857; padding: 15px; border-radius: 4px; width: 330px; margin-top: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 12px; font-family: Arial, sans-serif;">
+                    
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                        <div style="background: #047857; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fa-solid fa-users" style="color: #ffffff; font-size: 11px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 9px; font-weight: bold; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Nama Kelompok</div>
+                            <div style="font-size: 12px; font-weight: bold; color: #111827; margin-top: 2px;">Kelompok 30 (MindClash)</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                        <div style="background: #047857; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fa-solid fa-user-graduate" style="color: #ffffff; font-size: 11px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 9px; font-weight: bold; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Anggota</div>
+                            <div style="font-size: 11px; font-weight: bold; color: #111827; margin-top: 2px; line-height: 1.4;">
+                                Dio Ahmad Alfarisyi (714250015)<br>
+                                Mohammad Alif Syahiir (714250014)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                        <div style="background: #047857; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fa-solid fa-graduation-cap" style="color: #ffffff; font-size: 11px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 9px; font-weight: bold; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Program Studi</div>
+                            <div style="font-size: 12px; font-weight: bold; color: #111827; margin-top: 2px;">D4 Teknik Informatika</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                        <div style="background: #047857; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fa-solid fa-school" style="color: #ffffff; font-size: 11px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 9px; font-weight: bold; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Institusi</div>
+                            <div style="font-size: 11px; font-weight: bold; color: #111827; margin-top: 2px; line-height: 1.3;">Universitas Logistik dan Bisnis Internasional</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                        <div style="background: #047857; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fa-solid fa-calendar-days" style="color: #ffffff; font-size: 11px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 9px; font-weight: bold; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Tahun Akademik</div>
+                            <div style="font-size: 12px; font-weight: bold; color: #111827; margin-top: 2px;">2026/2027</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Right side Smartphone Mockup with floating icons -->
+            <div style="position: relative; width: 45%; height: 500px; display: flex; align-items: center; justify-content: center; margin-top: 20px;">
+                
+                <!-- Floating Graduation Cap SVG -->
+                <div style="position: absolute; right: 10px; top: 0px; transform: rotate(15deg); z-index: 5;">
+                    <svg width="65" height="65" viewBox="0 0 100 100">
+                        <polygon points="50,15 90,30 50,45 10,30" fill="#047857" stroke="#065f46" stroke-width="2"/>
+                        <path d="M25 40 V60 C25 60 35 70 50 70 C65 70 75 60 75 60 V40" fill="#047857" stroke="#065f46" stroke-width="2"/>
+                        <path d="M90 30 V55" fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="90" cy="55" r="4" fill="#f59e0b"/>
+                    </svg>
+                </div>
+
+                <!-- Floating Trophy SVG -->
+                <div style="position: absolute; left: -10px; bottom: 80px; transform: rotate(-12deg); z-index: 5;">
+                    <svg width="60" height="60" viewBox="0 0 100 100">
+                        <path d="M30 20 H70 V40 C70 55 50 65 50 65 C50 65 30 55 30 40 Z" fill="#fbbf24" stroke="#d97706" stroke-width="3"/>
+                        <path d="M50 65 V85 M35 85 H65" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M30 30 H20 V40 H30 M70 30 H80 V40 H70" fill="none" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div>
+
+                <!-- Floating Controller SVG -->
+                <div style="position: absolute; right: -10px; bottom: 180px; transform: rotate(8deg); z-index: 5;">
+                    <svg width="55" height="55" viewBox="0 0 100 100">
+                        <rect x="15" y="30" width="70" height="40" rx="20" fill="#10b981" stroke="#047857" stroke-width="3"/>
+                        <circle cx="35" cy="50" r="6" fill="#ffffff"/>
+                        <circle cx="65" cy="45" r="4" fill="#ffffff"/>
+                        <circle cx="65" cy="55" r="4" fill="#ffffff"/>
+                    </svg>
+                </div>
+
+                <!-- Smartphone Frame -->
+                <div style="width: 230px; height: 460px; background: #000; border-radius: 36px; padding: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 4px solid #1e293b; z-index: 10; position: relative;">
+                    <!-- Speaker notch -->
+                    <div style="position: absolute; top: 13px; left: 50%; transform: translateX(-50%); width: 75px; height: 16px; background: #000; border-radius: 8px; z-index: 20;"></div>
+                    <!-- Screen content -->
+                    <div style="width: 100%; height: 100%; border-radius: 26px; overflow: hidden; background: #0f172a; position: relative;">
+                        <img src="report_images/dashboard.png" style="width: 100%; height: 100%; object-fit: cover; border: none; margin: 0;">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Green Footer Bar CEPAT AMAN TERPERCAYA -->
+        <div class="cover-footer-bar" style="background: #047857; color: #ffffff; width: calc(100% + 30mm); margin-left: -15mm; margin-right: -15mm; padding: 12px 30mm; display: flex; justify-content: space-between; align-items: center; border-radius: 0; font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; letter-spacing: 2px; box-sizing: border-box; height: 45px; position: absolute; bottom: 0; left: 0; z-index: 10;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-gamepad" style="color: #ffffff !important;"></i> INTERAKTIF
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-regular fa-lightbulb" style="color: #ffffff !important;"></i> KREATIF
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-trophy" style="color: #ffffff !important;"></i> KOMPETITIF
+            </div>
+        </div>
+
+    </div>
+
+    <!-- KATA PENGANTAR -->
+    <div class="page-break">
+        <h1>Kata Pengantar</h1>
+        <p>Puji dan syukur penulis panjatkan kehadirat Allah SWT atas segala rahmat, hidayah, dan karunia-Nya, sehingga penulis dapat menyelesaikan laporan Dokumen Aplikasi Proyek 1 yang berjudul <strong>"MindClash: Solusi Pembelajaran Interaktif Masa Kini Melalui Pendekatan Gamifikasi Intensif"</strong> dengan baik dan tepat waktu.</p>
+        <p>Proyek ini disusun sebagai bagian dari luaran mata kuliah Proyek 1 pada Program Studi D-IV Teknik Informatika di Universitas Logistik dan Bisnis Internasional (ULBI) tahun akademik 2026-2027. Melalui proyek ini, diharapkan mahasiswa mampu mengintegrasikan keahlian pengembangan aplikasi web dengan kebutuhan riil di dunia pendidikan, khususnya dalam meningkatkan keterlibatan belajar siswa.</p>
+        <p>Dalam penyusunan laporan ini, penulis menyadari bahwa keberhasilan proyek ini tidak lepas dari bimbingan, dukungan, dan bantuan dari berbagai pihak. Oleh karena itu, penulis ingin menyampaikan terima kasih yang sebesar-besarnya kepada:</p>
+        <ol>
+            <li>Rektor dan segenap jajaran manajemen Universitas Logistik dan Bisnis Internasional (ULBI).</li>
+            <li>Dekan Fakultas dan Ketua Program Studi D-IV Teknik Informatika ULBI.</li>
+            <li>Dosen Pembimbing Proyek 1 yang senantiasa meluangkan waktu untuk memberikan arahan, saran, dan bimbingan yang sangat berharga selama proses perancangan dan implementasi aplikasi.</li>
+            <li>Teman-teman satu kelompok (Kelompok 30) atas dedikasi, kerja sama yang solid, dan kerja keras yang tidak kenal lelah selama pengembangan proyek MindClash.</li>
+            <li>Kedua orang tua tercinta yang senantiasa mendoakan dan memberikan dukungan moral maupun spiritual.</li>
+        </ol>
+        <p>Penulis menyadari bahwa laporan ini masih jauh dari sempurna. Oleh karena itu, kritik dan saran yang membangun dari pembaca sangat diharapkan demi penyempurnaan laporan maupun pengembangan aplikasi di masa yang akan datang.</p>
+        <p>Akhir kata, semoga dokumen aplikasi ini dapat memberikan manfaat yang nyata bagi pengembangan dunia teknologi pendidikan interaktif di Indonesia.</p>
+
+        <div class="signature-area">
+            <div>
+                <p>Bandung, Juli 2026</p>
+                <br><br><br>
+                <p><strong>Kelompok 30</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEMBAR PERNYATAAN PERSETUJUAN -->
+    <div class="page-break">
+        <h1>Lembar Pernyataan Persetujuan<br>dan Permohonan Sidang Proyek 1</h1>
+        <br>
+        <p class="no-indent" style="margin-bottom: 20px;">Saya sebagai Pembimbing Kelompok 30 dengan Anggota:</p>
+        
+        <table class="form-table" style="margin-top: 10px; margin-bottom: 30px;">
+            <tbody>
+                <tr>
+                    <td style="width: 220px; font-weight: bold; background-color: #f9fafb;">Nama Mahasiswa 1</td>
+                    <td>Dio Ahmad Alfarisyi</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; background-color: #f9fafb;">NPM</td>
+                    <td>714250015</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; background-color: #f9fafb;">Nama Mahasiswa 2</td>
+                    <td>Mohammad Alif Syahiir</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; background-color: #f9fafb;">NPM</td>
+                    <td>714250014</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; background-color: #f9fafb; height: 80px;">Judul Proyek 1</td>
+                    <td style="vertical-align: top; padding-top: 10px;">Solusi Pembelajaran Interaktif Masa Kini Melalui Pendekatan Gamifikasi Intensif (Aplikasi <strong>MindClash</strong>)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>Menyatakan bahwa mahasiswa tersebut telah menyelesaikan semua luaran dengan kemajuan: <strong>100%</strong> (Seratus Persen).</p>
+        <p class="no-indent">Bagian yang belum diselesaikan (Jika ada) :</p>
+        <p class="no-indent" style="color: #555555; margin-top: 5px;">........................................................................................................................................................................</p>
+        <p class="no-indent" style="color: #555555; margin-top: 5px; margin-bottom: 30px;">........................................................................................................................................................................</p>
+        
+        <p>Adapun penulisan laporan Akhir Proyek 1 telah diselesaikan seluruhnya (100%) Dengan demikian saya mengajukan mahasiswa tersebut untuk mengikuti</p>
+    </div>
+
+    <!-- LEMBAR PERNYATAAN PERSETUJUAN SIGNATURE (PAGE 4) -->
+    <div class="page-break" style="justify-content: flex-start; padding-top: 40px;">
+        <p class="no-indent" style="margin-bottom: 30px;">sidang Proyek 1. Apabila ternyata pernyataan saya tersebut tidak benar, maka saya menyetujui penundaan sidang termasuk pembatalan sidang Proyek 1 untuk mahasiswa bimbingan saya tersebut sesuai aturan yang berlaku.</p>
+        
+        <p class="no-indent" style="text-align: center; margin-top: 60px; margin-bottom: 40px; font-size: 14px;">Bandung, 4 Juli 2026</p>
+        
+        <div class="sign-grid" style="grid-template-columns: 1fr 1fr; gap: 80px;">
+            <div class="sign-box" style="text-align: left;">
+                <p><strong>Mahasiswa 1</strong></p>
+                <div class="sign-space" style="height: 70px;"></div>
+                <p class="sign-name" style="text-decoration: none;">Dio Ahmad Alfarisyi</p>
+                <p>NPM : 714250015</p>
+                
+                <div style="height: 40px;"></div>
+                
+                <p><strong>Mahasiswa 2</strong></p>
+                <div class="sign-space" style="height: 70px;"></div>
+                <p class="sign-name" style="text-decoration: none;">Mohammad Alif Syahiir</p>
+                <p>NPM : 714250014</p>
+            </div>
+            
+            <div class="sign-box" style="text-align: left;">
+                <p><strong>Dosen Pembimbing</strong></p>
+                <div class="sign-space" style="height: 70px;"></div>
+                <p class="sign-name" style="text-decoration: none;">________________________</p>
+                <p>NIK : </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEMBAR PENGESAHAN -->
+    <div class="page-break">
+        <h1>Lembar Pengesahan</h1>
+        <br>
+        <p class="no-indent" style="text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 25px; text-transform: uppercase;">
+            &lt; Solusi Pembelajaran Interaktif Masa Kini Melalui Pendekatan Gamifikasi Intensif &gt;
+        </p>
+
+        <div style="width: 100%; max-width: 550px; margin: 0 auto 30px auto; font-size: 14px; font-family: 'Times New Roman', Times, serif;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span>Nama Mahasiswa 1: <strong>Dio Ahmad Alfarisyi</strong></span>
+                <span>NPM: <strong>714250015</strong></span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span>Nama Mahasiswa 2: <strong>Mohammad Alif Syahiir</strong></span>
+                <span>NPM: <strong>714250014</strong></span>
+            </div>
+        </div>
+
+        <p class="no-indent" style="text-align: center; margin-bottom: 40px; line-height: 1.5;">
+            Dokumen Proyek 1 ini telah diperiksa, disetujui dan disidangkan<br>
+            Di Bandung, 4 Juli 2026
+        </p>
+
+        <p class="no-indent" style="text-align: center; font-weight: bold; margin-bottom: 25px;">Oleh :</p>
+
+        <!-- Signature Grid 1 -->
+        <div class="sign-grid" style="grid-template-columns: 1fr 1fr; gap: 50px; margin-bottom: 30px;">
+            <div class="sign-box">
+                <p><strong>Penguji Pendamping,</strong></p>
+                <div class="sign-space" style="height: 65px;"></div>
+                <p class="sign-name">________________________</p>
+                <p>NIK:</p>
+            </div>
+            <div class="sign-box">
+                <p><strong>Penguji Utama,</strong></p>
+                <div class="sign-space" style="height: 65px;"></div>
+                <p class="sign-name">________________________</p>
+                <p>NIK:</p>
+            </div>
+        </div>
+
+        <!-- Signature Grid 2 -->
+        <div class="sign-grid" style="grid-template-columns: 1fr 1fr; gap: 50px; margin-bottom: 35px;">
+            <div class="sign-box">
+                <p><strong>Pembimbing,</strong></p>
+                <div class="sign-space" style="height: 65px;"></div>
+                <p class="sign-name">________________________</p>
+                <p>NIK:</p>
+            </div>
+            <div class="sign-box">
+                <p><strong>Koordinator Proyek 1,</strong></p>
+                <div class="sign-space" style="height: 65px;"></div>
+                <p class="sign-name">________________________</p>
+                <p>NIK:</p>
+            </div>
+        </div>
+
+        <!-- Signature Centered -->
+        <div class="sign-box" style="margin-top: 20px;">
+            <p><strong>Menyetujui,</strong></p>
+            <p><strong>Ketua Program Studi D-IV Teknik Informatika,</strong></p>
+            <div class="sign-space" style="height: 65px;"></div>
+            <p class="sign-name">________________________</p>
+            <p>NIK:</p>
+        </div>
+    </div>
+
+    <!-- DAFTAR ISI -->
+    <div class="page-break">
+        <h1>Daftar Isi</h1>
+        <br>
+        <ul class="toc-list">
+            <li class="toc-item">
+                <span class="toc-title">KATA PENGANTAR</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">ii</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">LEMBAR PERNYATAAN PERSETUJUAN DAN PERMOHONAN SIDANG</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">iii</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">LEMBAR PENGESAHAN</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">iv</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">DAFTAR ISI</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">v</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">BAB 1: PENDAHULUAN</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">1</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">1.1 Latar Belakang</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">1</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">1.2 Nama Aplikasi dan Dasar Ide</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">2</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">1.3 Tujuan Pengembangan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">3</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">1.4 Ruang Lingkup</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">3</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">BAB 2: DESKRIPSI SISTEM</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">5</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">2.1 Gambaran Umum Aplikasi</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">5</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">2.2 Stakeholder dan User</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">5</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">2.3 Kebutuhan Fungsional</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">6</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">2.4 Kebutuhan Non-Fungsional</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">6</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">BAB 3: PERANCANGAN SISTEM</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">8</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">3.1 Arsitektur Sistem</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">8</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">3.2 Workflow Sistem</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">9</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">3.3 Class Diagram</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">10</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">3.4 Entity Relationship Diagram (ERD)</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">11</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">BAB 4: DESAIN ANTARMUKA</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">12</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">4.1 Konsep Desain</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">12</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">4.2 Mockup / Wireframe</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">12</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">4.3 Deskripsi Tampilan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">14</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">BAB 5: IMPLEMENTASI DASAR</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">15</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">5.1 Tools dan Teknologi</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">15</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">5.2 Struktur Folder Proyek</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">16</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">5.3 Petunjuk Menjalankan Aplikasi</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">17</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">BAB 6: PENUTUP</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">18</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">6.1 Kesimpulan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">18</span>
+            </li>
+            <li class="toc-item toc-subitem">
+                <span class="toc-title">6.2 Saran Pengembangan</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">18</span>
+            </li>
+            <li class="toc-item">
+                <span class="toc-title">DAFTAR PUSTAKA</span>
+                <span class="toc-dots"></span>
+                <span class="toc-page">20</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- BAB 1: PENDAHULUAN -->
+    <div class="page-break">
+        <h1>BAB 1: PENDAHULUAN</h1>
+        
+        <h2>1.1 Latar Belakang</h2>
+        <p>Perkembangan teknologi informasi yang masif di era digital telah membawa transformasi besar pada sektor pendidikan, khususnya dalam restrukturisasi media pembelajaran [1]. Keberhasilan suatu proses edukasi sangat dipengaruhi oleh tingkat ketertarikan dan motivasi intrinsik peserta didik. Namun, dalam realitasnya, ekosistem pembelajaran konvensional masih sering didominasi oleh metode satu arah yang bersifat kaku dan monoton [2].</p>
+        <p>Kondisi tersebut berdampak langsung pada penurunan atensi, rendahnya keterlibatan aktif, serta minimnya motivasi belajar siswa di kelas [2]. Oleh karena itu, penerapan metode Game-Based Learning (GBL) atau gamifikasi menjadi urgensi krusial sebagai instrumen alternatif yang mampu merancang ruang belajar digital yang adaptif, berpusat pada siswa, serta sejalan dengan kebutuhan dinamika pendidikan modern saat ini [1].</p>
+        <p>Keberhasilan suatu proses pembelajaran tidak terlepas dari peran sentral seorang guru dalam merancang ekosistem belajar yang kondusif, menantang, dan menyenangkan. Sebagaimana ditegaskan oleh [3], guru merupakan komponen terpenting yang menentukan keberhasilan peserta didik, sehingga seorang pendidik dituntut mampu memilih metode dan media pembelajaran yang tepat guna membangun suasana belajar yang mampu membangkitkan semangat siswa. Tuntutan ini menjadi semakin relevan mengingat masih dominannya pendekatan konvensional yang bersifat satu arah dan minim interaksi, yang berdampak langsung pada menurunnya partisipasi aktif, melemahnya konsentrasi, serta terkikisnya motivasi intrinsik siswa di dalam kelas.</p>
+        <p>Dalam upaya mengatasi problem matinya partisipasi aktif siswa, platform edukasi berbasis gamifikasi populer seperti Quizizz dan Kahoot! telah banyak diadopsi secara luas sebagai instrumen alternatif yang mampu merancang ruang belajar digital yang adaptif dan berpusat pada siswa. Adopsi yang masif ini ditopang oleh bukti empiris yang kuat: [3] membuktikan secara eksperimental bahwa penggunaan Kahoot menghasilkan perbedaan motivasi belajar yang signifikan antara kelas eksperimen dan kelas kontrol dengan nilai signifikansi 0,000 < 0,05, menegaskan bahwa platform ini mampu merangsang keaktifan dan kecepatan berpikir siswa secara terukur. Senada dengan hal tersebut, [4] melalui studi komparatifnya mengungkapkan bahwa Kahoot sangat efektif meningkatkan motivasi melalui sistem kompetitif berbasis leaderboard untuk sesi langsung di kelas, sementara Quizizz unggul dalam fleksibilitas belajar mandiri dengan laporan hasil yang lebih terperinci untuk keperluan evaluasi formatif.</p>
+        <p>Dengan demikian, kajian mengenai solusi pembelajaran interaktif melalui pendekatan gamifikasi intensif menjadi penting untuk dilakukan guna memberikan panduan praktis bagi pendidik dalam merancang pengalaman belajar yang lebih adaptif dan bermakna bagi generasi pelajar digital saat ini. Berbagai riset membuktikan bahwa integrasi platform interaktif semacam Quizizz sangat efektif digunakan sebagai media evaluasi pembelajaran digital karena mampu menstimulasi antusiasme kompetitif siswa melalui visualisasi yang interaktif [5].</p>
+        <p>Meskipun begitu, penggunaan platform umum tersebut di lapangan masih memiliki batasan-batasan tertentu. Model kuis yang ada sekarang biasanya terlalu fokus pada seberapa cepat seseorang menjawab, sehingga siswa cenderung menebak jawaban dengan spekulatif untuk mendapatkan posisi yang baik di papan peringkat. Selain itu, ketergantungan platform kuis biasa pada adanya interaksi banyak pemain secara langsung membuat proses belajar sendiri yang dilakukan secara tidak bersamaan menjadi kurang menantang dan kurang terkelola dengan baik.</p>
+        <p>Dari perbedaan fungsi tersebut, dibuatlah sebuah sistem informasi baru yang disebut MindClash dengan fokus pada sub-tema "Solusi Pembelajaran Interaktif Saat Ini Melalui Pendekatan Gamifikasi yang Intensif". Aplikasi ini tidak hanya dibuat sebagai alat penilaian digital biasa, tetapi juga sebagai platform untuk belajar sendiri yang menggabungkan elemen permainan dengan cara yang mendalam.</p>
+        <p>MindClash memperkenalkan inovasi baru dengan sistem nyawa (mode bertahan hidup) serta visualisasi umpan balik langsung berupa penjelasan konteks setelah setiap soal. Pendekatan gamifikasi yang intens ini bertujuan untuk memberikan dorongan psikologis yang positif bagi pengguna. Hal ini dilakukan agar mereka dapat melatih kemampuan berpikir kritis, membantu mereka melakukan evaluasi diri ketika terjadi kesalahan, dan juga memberikan kebebasan bagi siswa untuk mengembangkan keterampilan mereka kapan saja secara mandiri tanpa harus bergantung pada kehadiran orang lain.</p>
+        <p>Untuk mewujudkan sistem kuis yang dinamis dan terstruktur, aplikasi MindClash dibuat dengan arsitektur yang memisahkan bagian frontend dan backend (arsitektur client-server). Ini bertujuan untuk meningkatkan fleksibilitas dan kinerja sistem. Dalam bagian tampilan pengguna, aplikasi ini dirancang dengan antarmuka depan menggunakan Laravel Blade Template yang disempurnakan dengan Tailwind CSS untuk menyajikan visualisasi yang responsif, interaktif, dan mudah digunakan. Di sisi backend, digunakan bahasa pemrograman PHP dengan framework Laravel 12 yang terhubung langsung dengan sistem basis data relasional. PHP dipilih karena penggunaannya yang luas di industri serta kemudahan dalam proses deployment di berbagai lingkungan server, sementara Laravel dipilih karena fitur-fitur bawaannya seperti sistem routing, ORM Eloquent, dan middleware yang secara signifikan mempercepat proses pengembangan sekaligus menjaga keteraturan struktur kode backend.</p>
+        <p>Dengan kerja sama teknologi ini, pengelolaan data yang berubah-ubah melalui fitur Buat, Baca, Perbarui, dan Hapus (CRUD) bisa berjalan dengan baik. Sistem ini dapat memastikan bahwa setiap proses manajemen data mengenai soal, riwayat sesi permainan, pengumpulan skor di papan peringkat, dan pencapaian lencana dapat berjalan dengan cara yang teratur, konsisten, dan aman. Dengan desain arsitektur yang kuat menggunakan PHP dan Tailwind CSS, aplikasi MindClash diharapkan bisa menjadi alat belajar yang interaktif, menantang, dan berkelanjutan untuk meningkatkan kualitas pemahaman akademis para siswa.</p>
+
+        <h2>1.2 Nama Aplikasi dan Dasar Ide</h2>
+        <h3>1.2.1 Deskripsi Nama Aplikasi</h3>
+        <p>Aplikasi yang dikembangkan dalam proyek ini diberi nama <strong>MindClash</strong>. Nama "MindClash" merupakan gabungan dari dua kata dalam bahasa Inggris, yakni <em>Mind</em> yang berarti kecerdasan dan <em>Clash</em> yang berarti kompetisi, sehingga secara keseluruhan MindClash dapat dimaknai sebagai <strong>"Kompetisi Kecerdasan"</strong>. Pemilihan nama ini merepresentasikan visi utama aplikasi, yaitu menciptakan sebuah arena belajar digital di mana pengguna tidak hanya sekadar menjawab soal, tetapi juga ditantang untuk berkompetisi secara intelektual bersama sesama pengguna. Sebagai sebuah platform pembelajaran interaktif berbasis gamifikasi, MindClash dirancang untuk mengubah pengalaman belajar yang pasif menjadi sebuah kompetisi kecerdasan yang menantang, menyenangkan, dan bermakna.</p>
+        
+        <h3>1.2.2 Dasar Ide Pengembangan</h3>
+        <p>Ide pengembangan MindClash berangkat dari pengamatan terhadap permasalahan nyata yang kerap dijumpai dalam proses belajar sehari-hari. Berdasarkan kondisi yang telah dipaparkan pada latar belakang, munculnya ide aplikasi ini didasari oleh dua permasalahan pokok, yakni:</p>
+        <ol>
+            <li><strong>Platform kuis yang ada terlalu berfokus pada kecepatan menjawab, bukan pada pemahaman.</strong> Dalam keseharian, siswa yang menggunakan platform kuis populer cenderung didorong untuk menjawab secepat mungkin demi memperoleh posisi tertinggi di papan peringkat. Akibatnya, siswa lebih sering menebak jawaban secara spekulatif daripada benar-benar memahami materi. Kondisi ini menginspirasi perlunya fitur umpan balik kontekstual yang memberikan penjelasan setelah setiap soal dijawab, agar proses belajar tetap berlangsung meskipun siswa melakukan kesalahan.</li>
+            <li><strong>Siswa mudah bosan dengan metode belajar konvensional di kelas.</strong> Pendekatan pembelajaran yang monoton dan satu arah terbukti menurunkan motivasi dan keterlibatan aktif siswa. Kondisi ini menginspirasi penerapan pendekatan gamifikasi intensif pada MindClash, seperti sistem nyawa pada mode bertahan hidup, yang memberikan dorongan psikologis positif agar siswa tetap termotivasi dan terlibat aktif dalam setiap sesi belajar.</li>
+        </ol>
+        <p>Melalui integrasi kedua permasalahan harian tersebut, MindClash diposisikan bukan sekadar alat evaluasi digital biasa, melainkan sebagai solusi pembelajaran interaktif yang komprehensif bagi siswa untuk mengembangkan kecerdasan dan kemampuan berpikir kritis secara mandiri, kapan saja, dan di mana saja.</p>
+
+        <h2>1.3 Tujuan Pengembangan</h2>
+        <h3>1.3.1 Tujuan Umum</h3>
+        <p>Mengembangkan platform pembelajaran interaktif berbasis gamifikasi intensif yang mampu meningkatkan motivasi dan partisipasi aktif siswa dalam belajar, sekaligus menghadirkan pengalaman belajar yang menantang dan menyenangkan melalui integrasi elemen permainan yang mendalam ke dalam proses evaluasi dan penguatan pemahaman materi.</p>
+        
+        <h3>1.3.2 Tujuan Khusus</h3>
+        <ol>
+            <li><strong>Mengimplementasikan Sistem Nyawa sebagai Elemen Gamifikasi:</strong> Menerapkan mekanisme sistem nyawa pada mode bertahan hidup sebagai instrumen gamifikasi intensif yang memberikan dorongan psikologis positif, mendorong siswa untuk lebih berhati-hati dalam menjawab, serta melatih kemampuan berpikir kritis dan evaluasi diri ketika terjadi kesalahan.</li>
+            <li><strong>Menyediakan Umpan Balik Kontekstual Setelah Setiap Soal:</strong> Membangun sistem visualisasi umpan balik langsung berupa penjelasan konteks setelah setiap soal dijawab, sehingga proses belajar tetap berlangsung secara bermakna dan siswa tidak hanya sekadar mengetahui jawaban yang benar, tetapi juga memahami alasan di baliknya.</li>
+        </ol>
+
+        <h2>1.4 Ruang Lingkup</h2>
+        <ol>
+            <li><strong>Fokus Penelitian:</strong> Penelitian ini berfokus pada pengembangan sistem informasi kuis pembelajaran interaktif berbasis web yang diberi nama MindClash, dengan sub-tema "Solusi Pembelajaran Interaktif Saat Ini Melalui Pendekatan Gamifikasi yang Intensif". Penelitian ini bertujuan untuk menyediakan media evaluasi dan pembelajaran mandiri secara asinkron yang mendalam bagi siswa, dengan mengimplementasikan arsitektur monolitik terstruktur menggunakan teknologi PHP sebagai backend (pengelola logika bisnis dan basis data relasional) serta Blade dan JavaScript vanilla sebagai frontend (antarmuka pengguna yang responsif).</li>
+            <li><strong>Batasan Sistem MindClash:</strong> Sistem ini dirancang untuk mengintegrasikan elemen gamifikasi intensif yang mencakup fitur sistem nyawa (mode bertahan hidup), umpan balik langsung berupa penjelasan konteks setelah setiap soal, pengelolaan papan peringkat (leaderboard), dan pencapaian lencana (badges). Cakupan pengembangan sistem ini terbatas pada platform aplikasi web dan tidak mencakup pengembangan aplikasi mobile. Selain itu, sistem ini difokuskan pada metode belajar mandiri, sehingga tidak memfasilitasi fitur multipemain langsung secara langsung (real-time multiplayer antar-pengguna).</li>
+            <li><strong>Aktor Sistem:</strong> Pengguna yang terlibat di dalam sistem ini dibatasi pada 2 (dua) peran utama dengan hak akses sebagai berikut:
+                <ul>
+                    <li><strong>Admin:</strong> Pihak yang bertanggung jawab penuh dalam mengelola seluruh data sistem melalui fitur CRUD (Buat, Baca, Perbarui, dan Hapus), yang meliputi manajemen data soal kuis, pemantauan riwayat sesi permainan, pengelolaan akumulasi skor papan peringkat, serta pengaturan pencapaian lencana.</li>
+                    <li><strong>Siswa (Pengguna):</strong> Pengguna yang memanfaatkan platform secara mandiri untuk mengakses kuis, memilih mode bertahan hidup, menerima umpan balik/penjelasan konteks soal, melihat peringkat pada leaderboard, serta melacak lencana pencapaian yang telah diperoleh.</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <!-- BAB 2: DESKRIPSI SISTEM -->
+    <div class="page-break">
+        <h1>BAB 2: DESKRIPSI SISTEM</h1>
+        
+        <h2>2.1 Gambaran Umum Aplikasi</h2>
+        <p>MindClash adalah sebuah platform pembelajaran interaktif (gamified learning) berbasis web yang dirancang untuk meningkatkan motivasi belajar siswa SMP melalui pendekatan kompetisi yang menyenangkan. Aplikasi ini bekerja dengan cara mengubah proses belajar konvensional menjadi pengalaman bermain melalui kuis pilihan ganda yang dikelompokkan berdasarkan topik atau mata pelajaran, dipadukan dengan sistem duel/battle antar pengguna secara real-time ke dalam satu platform yang terpusat.</p>
+        <p>Aplikasi ini bisa digunakan sebagai tempat belajar sekaligus berlomba. Siswa bisa memilih topik kuis yang ingin dipelajari, menghadapi tantangan dari siswa lain dalam sesi pertandingan untuk menjawab soal dengan lebih cepat dan lebih benar, mendapatkan poin atau XP setiap kali mereka menyelesaikan kuis atau pertandingan, serta memantau letak mereka di leaderboard yang menampilkan peringkat pengguna secara berkala.</p>
+        <p>Dengan sistem kompetisi dan poin ini, proses belajar yang dulu hanya dilakukan secara pasif kini menjadi lebih aktif, terukur, dan mendorong siswa untuk terus meningkatkan pemahaman terhadap materi.</p>
+
+        <h2>2.2 Stakeholder dan User</h2>
+        <p>Berdasarkan batasan aktor sistem yang telah dijelaskan pada sub-bab Ruang Lingkup, pengguna yang terlibat secara langsung dalam sistem MindClash dibatasi pada 2 (dua) peran utama, yaitu Admin dan Siswa (Pengguna). Kedua peran ini memiliki hak akses yang berbeda sesuai dengan fungsi dan tanggung jawab masing-masing di dalam sistem, sebagaimana dijabarkan pada tabel berikut.</p>
+        
+        <table class="form-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px; text-align: center;">No</th>
+                    <th style="width: 150px;">Aktor / User</th>
+                    <th>Deskripsi</th>
+                    <th>Hak Akses</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center;">1</td>
+                    <td><strong>Admin</strong></td>
+                    <td>Pihak yang bertanggung jawab penuh dalam mengelola seluruh data dan konten di dalam sistem MindClash.</td>
+                    <td>
+                        a. Melakukan CRUD (Buat, Baca, Perbarui, Hapus) data soal kuis dan kategori.<br>
+                        b. Memantau riwayat sesi permainan siswa.<br>
+                        c. Mengelola akumulasi skor pada leaderboard.<br>
+                        d. Mengatur pencapaian lencana (badges).
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">2</td>
+                    <td><strong>Siswa (Pengguna)</strong></td>
+                    <td>Pengguna akhir yang memanfaatkan aplikasi secara mandiri sebagai media belajar sekaligus berkompetisi.</td>
+                    <td>
+                        a. Mengakses dan mengerjakan kuis berdasarkan kategori pelajaran.<br>
+                        b. Memilih Mode Kuis/Kategori Kuis.<br>
+                        c. Menerima umpan balik/penjelasan konteks setelah menjawab kuis.<br>
+                        d. Melihat posisi dan peringkat pada leaderboard kelas.<br>
+                        e. Melacak lencana pencapaian (badges) yang diperoleh.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>2.3 Kebutuhan Fungsional</h2>
+        <p>Kebutuhan fungsional merupakan fitur-fitur utama yang harus disediakan oleh sistem MindClash agar dapat berjalan sesuai dengan tujuan dan ruang lingkup yang telah ditetapkan. Berdasarkan pembagian aktor pada sub-bab sebelumnya, kebutuhan fungsional dikelompokkan menjadi 2 (dua) bagian, yaitu kebutuhan fungsional untuk Admin dan kebutuhan fungsional untuk Siswa (Pengguna).</p>
+        
+        <h3>A. Kebutuhan Fungsional untuk Admin</h3>
+        <ol>
+            <li>Sistem dapat menyediakan fitur Buat, Baca, Perbarui, dan Hapus (CRUD) data soal kuis dan kategori bagi Admin.</li>
+            <li>Sistem dapat menampilkan riwayat sesi permainan siswa agar dapat dipantau oleh Admin.</li>
+            <li>Sistem dapat mengelola akumulasi skor pengguna pada papan peringkat (leaderboard).</li>
+            <li>Sistem dapat mengatur data pencapaian lencana (badges) yang dapat diperoleh siswa.</li>
+            <li>Sistem dapat mengunduh dan mencetak laporan nilai kuis siswa dalam format PDF.</li>
+        </ol>
+
+        <h3>B. Kebutuhan Fungsional untuk Siswa (Pengguna)</h3>
+        <ol>
+            <li>Sistem dapat menampilkan kuis pilihan ganda yang dikelompokkan berdasarkan topik atau mata pelajaran.</li>
+            <li>Sistem dapat menyediakan Mode Kuis dengan batas waktu (timer) sebagai instrumen gamifikasi.</li>
+            <li>Sistem dapat menampilkan antarmuka kuis satu per satu dengan transisi tombol navigasi "Sebelumnya" dan "Selanjutnya".</li>
+            <li>Sistem dapat menyimpan hasil pengerjaan kuis siswa secara otomatis saat waktu pengerjaan habis.</li>
+            <li>Sistem dapat menampilkan riwayat pengerjaan kuis beserta review detail jawaban yang benar dan salah.</li>
+            <li>Sistem dapat menampilkan posisi dan peringkat pengguna secara berkala pada papan peringkat (leaderboard) berdasarkan kelas masing-masing.</li>
+        </ol>
+
+        <h2>2.4 Kebutuhan Non-Fungsional</h2>
+        <p>Kebutuhan non-fungsional merupakan kebutuhan yang berkaitan dengan kualitas dan karakteristik operasional sistem MindClash, di luar fitur-fitur utama yang telah dijabarkan pada sub-bab sebelumnya. Berdasarkan arsitektur dan teknologi yang digunakan dalam pengembangan aplikasi, kebutuhan non-fungsional MindClash dikelompokkan menjadi 3 (tiga) aspek, yaitu kecepatan sistem, kemudahan penggunaan, dan keamanan sederhana.</p>
+        
+        <h3>A. Kecepatan Sistem (Performance)</h3>
+        <ol>
+            <li>Sistem dapat meminimalkan pemuatan ulang halaman secara berlebihan dengan rendering yang efisien pada sisi klien menggunakan Tailwind CSS dan JavaScript Vanilla.</li>
+            <li>Sistem dapat memproses logika bisnis dan pengelolaan data pada sisi backend menggunakan framework Laravel 12 yang efisien dan cepat melalui ORM Eloquent.</li>
+            <li>Sistem dapat mengelola database dengan indeks yang tepat agar kueri leaderboard dan kuis berjalan kurang dari 1 detik.</li>
+        </ol>
+
+        <h3>B. Kemudahan Penggunaan (Usability)</h3>
+        <ol>
+            <li>Sistem dapat menyediakan antarmuka yang responsif (mobile-friendly), interaktif, dan mudah digunakan oleh siswa SMP.</li>
+            <li>Sistem dapat menyajikan skema warna bertema gelap (Dark Mode) yang modern untuk mengurangi kelelahan mata siswa saat belajar dalam durasi lama.</li>
+            <li>Sistem dapat diakses langsung melalui web browser populer (Chrome, Firefox, Safari, Edge) tanpa memerlukan proses instalasi aplikasi tambahan.</li>
+        </ol>
+
+        <h3>C. Keamanan Sederhana (Security)</h3>
+        <ol>
+            <li>Sistem dapat melindungi data kredensial pengguna menggunakan enkripsi hashing satu arah (BCrypt) untuk password.</li>
+            <li>Sistem dapat menerapkan middleware otentikasi untuk mencegah pengguna yang tidak terotentikasi mengakses halaman dasbor siswa maupun admin.</li>
+            <li>Sistem dapat menerapkan middleware pembatasan hak akses (role-based authorization) agar peran Siswa tidak dapat mengakses dasbor Admin.</li>
+        </ol>
+    </div>
+
+    <!-- BAB 3: PERANCANGAN SISTEM -->
+    <div class="page-break">
+        <h1>BAB 3: PERANCANGAN SISTEM</h1>
+        
+        <h2>3.1 Arsitektur Sistem</h2>
+        <p>Aplikasi <strong>MindClash</strong> menggunakan pola arsitektur <strong>Model-View-Controller (MVC)</strong> yang ditawarkan oleh framework Laravel. Sistem ini dikembangkan secara monolitik modern, di mana backend dan frontend terintegrasi dalam satu repositori namun dipisahkan secara logis. Komunikasi antara frontend (klien) dan backend (server) dilakukan melalui protokol HTTP/HTTPS.</p>
+        <p>Berikut adalah diagram hubungan arsitektur sistem MindClash:</p>
+        
+        <div class="diagram-block">
+            <div class="diagram-node">Klien (Browser)<br><span style="font-size: 11px; font-weight: normal; color: var(--text-muted);">Blade View + Tailwind CSS + Vanilla JS</span></div>
+            <div class="diagram-arrow"><i class="fa-solid fa-arrow-down-long"></i> HTTP / HTTPS <i class="fa-solid fa-arrow-up-long"></i></div>
+            <div class="diagram-node secondary">Server Laravel (Routing & Middleware)<br><span style="font-size: 11px; font-weight: normal; color: #a5f3fc;">web.php & auth/role middlewares</span></div>
+            <div class="diagram-arrow"><i class="fa-solid fa-arrow-down-long"></i></div>
+            <div class="diagram-node secondary">Controllers (MVC Logic)<br><span style="font-size: 11px; font-weight: normal; color: #a5f3fc;">UserController, QuestionController, dll</span></div>
+            <div class="diagram-arrow"><i class="fa-solid fa-arrow-down-long"></i> Eloquent ORM</div>
+            <div class="diagram-node">Database Layer<br><span style="font-size: 11px; font-weight: normal; color: var(--text-muted);">MySQL / SQLite</span></div>
+        </div>
+
+        <h2>3.2 Workflow Sistem</h2>
+        <p>Workflow utama sistem menggambarkan langkah-langkah penggunaan aplikasi dari sudut pandang Siswa (saat pengerjaan kuis) dan Admin (saat mengelola soal).</p>
+        
+        <h3>Workflow Pengerjaan Kuis Siswa:</h3>
+        <ol>
+            <li>Siswa mengakses halaman login, memasukkan email dan password terdaftar.</li>
+            <li>Setelah otentikasi berhasil, siswa diarahkan ke Halaman Dashboard Utama Siswa yang berisi grafik ringkasan nilai, total kuis yang telah dikerjakan, dan lencana kategori.</li>
+            <li>Siswa memilih salah satu kategori kuis yang ingin dikerjakan (contoh: Matematika, IPA, Teknologi Informasi).</li>
+            <li>Siswa menekan tombol "Mulai Kuis", sistem merender kuis dan memulai hitung mundur timer. Soal kuis ditampilkan satu per satu di layar.</li>
+            <li>Siswa memilih jawaban A, B, C, atau D. Siswa dapat menekan tombol "Selanjutnya" untuk menuju soal berikut atau "Sebelumnya" untuk meninjau kembali.</li>
+            <li>Setelah soal terakhir dijawab, siswa menekan tombol "Selesai & Lihat Hasil" (atau jika waktu kuis habis, sistem otomatis melakukan submit).</li>
+            <li>Server memproses jawaban kuis, menghitung nilai akhir, menyimpan hasilnya ke database, dan menampilkan Halaman Skor Akhir.</li>
+            <li>Siswa dapat melihat ulasan jawaban secara mendalam pada halaman review untuk mengetahui pembahasan soal yang salah.</li>
+        </ol>
+
+        <h2>3.3 Class Diagram</h2>
+        <p>Class diagram di bawah menggambarkan relasi antar model data inti dalam sistem MindClash:</p>
+        
+        <div class="card" style="font-family: monospace; font-size: 13px; color: #a78bfa; background: #090d16; border: 1px solid var(--primary);">
+            <strong>User</strong><br>
+            - id: int<br>
+            - name: string<br>
+            - email: string<br>
+            - role: string ("admin" / "user")<br>
+            - class: string (nullable)<br>
+            + quizResults(): HasMany<br>
+            <br>
+            <strong>Category</strong><br>
+            - id: int<br>
+            - name: string<br>
+            - description: text<br>
+            - time_limit: int<br>
+            + questions(): HasMany<br>
+            + quizResults(): HasMany<br>
+            <br>
+            <strong>Question</strong><br>
+            - id: int<br>
+            - category_id: int<br>
+            - question_text: text<br>
+            - option_a/b/c/d: string<br>
+            - correct_answer: char<br>
+            + category(): BelongsTo<br>
+            <br>
+            <strong>QuizResult</strong><br>
+            - id: int<br>
+            - user_id: int<br>
+            - category_id: int<br>
+            - total_questions: int<br>
+            - correct_answers: int<br>
+            - score: int<br>
+            - answers: array (JSON)<br>
+            + user(): BelongsTo<br>
+            + category(): BelongsTo
+        </div>
+
+        <h2>3.4 Entity Relationship Diagram (ERD)</h2>
+        <div class="mermaid" style="background: #111827; border-radius: 8px; padding: 20px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+            erDiagram
+                USERS ||--o{ QUIZ_RESULTS : "mengerjakan"
+                CATEGORIES ||--o{ QUESTIONS : "memiliki"
+                CATEGORIES ||--o{ QUIZ_RESULTS : "memiliki"
+
+                USERS {
+                    bigint_unsigned id PK
+                    varchar_255 name
+                    varchar_255 email UK
+                    varchar_255 avatar
+                    varchar_255 password
+                    enum_admin_user role
+                    varchar_255 class
+                    varchar_100 remember_token
+                    timestamp created_at
+                    timestamp updated_at
+                }
+
+                CATEGORIES {
+                    bigint_unsigned id PK
+                    varchar_255 name
+                    text description
+                    int time_limit
+                    timestamp created_at
+                    timestamp updated_at
+                }
+
+                QUESTIONS {
+                    bigint_unsigned id PK
+                    bigint_unsigned category_id FK
+                    text question_text
+                    varchar_255 option_a
+                    varchar_255 option_b
+                    varchar_255 option_c
+                    varchar_255 option_d
+                    char_1 correct_answer
+                    timestamp created_at
+                    timestamp updated_at
+                }
+
+                QUIZ_RESULTS {
+                    bigint_unsigned id PK
+                    bigint_unsigned user_id FK
+                    bigint_unsigned category_id FK
+                    int total_questions
+                    int correct_answers
+                    int score
+                    text answers
+                    timestamp created_at
+                    timestamp updated_at
+                }
+        </div>
+        <p>Struktur database relasional digambarkan melalui entitas-entitas tabel yang terhubung untuk menyimpan data secara aman dan terstruktur. Berikut detail penjelasan tipe data database dan relasi antar tabel pada aplikasi MindClash:</p>
+
+        <h3 style="color: var(--primary-light); font-size: 16px; margin-top: 15px;">A. Penjelasan Tipe Data Database</h3>
+        <ul style="margin-left: 20px; margin-bottom: 20px;">
+            <li><strong>Tabel <code>users</code>:</strong>
+                <ul>
+                    <li><code>id</code> (<code>bigint unsigned</code>, PK, Auto Increment): Identitas unik bertipe integer besar (8 byte).</li>
+                    <li><code>name</code> (<code>varchar(255)</code>): String alfanumerik nama lengkap pengguna.</li>
+                    <li><code>email</code> (<code>varchar(255)</code>, Unique): Surel login yang bersifat unik di sistem.</li>
+                    <li><code>avatar</code> (<code>varchar(255)</code>, Nullable): Menyimpan lokasi berkas foto profil pengguna.</li>
+                    <li><code>password</code> (<code>varchar(255)</code>): Kata sandi terenkripsi aman menggunakan algoritma BCrypt.</li>
+                    <li><code>role</code> (<code>enum('admin','user')</code>): Menetapkan pembagian hak akses (admin vs siswa).</li>
+                    <li><code>class</code> (<code>varchar(255)</code>, Nullable): Kelas siswa (misal: "7A", "7B").</li>
+                    <li><code>remember_token</code> (<code>varchar(100)</code>, Nullable): Token untuk fungsi "tetap masuk".</li>
+                </ul>
+            </li>
+            <li style="margin-top: 10px;"><strong>Tabel <code>categories</code>:</strong>
+                <ul>
+                    <li><code>id</code> (<code>bigint unsigned</code>, PK): Identitas unik untuk kategori kuis.</li>
+                    <li><code>name</code> (<code>varchar(255)</code>): Nama kategori kuis pelajaran (Matematika, IPA, dll).</li>
+                    <li><code>description</code> (<code>text</code>, Nullable): Penjelasan lengkap kategori pelajaran.</li>
+                    <li><code>time_limit</code> (<code>int</code>): Durasi pengerjaan kuis dalam satuan menit.</li>
+                </ul>
+            </li>
+            <li style="margin-top: 10px;"><strong>Tabel <code>questions</code>:</strong>
+                <ul>
+                    <li><code>id</code> (<code>bigint unsigned</code>, PK): Identitas unik butir pertanyaan.</li>
+                    <li><code>category_id</code> (<code>bigint unsigned</code>, FK): Menghubungkan soal ke kategori kuis (Cascade Delete).</li>
+                    <li><code>question_text</code> (<code>text</code>): Teks pertanyaan berukuran besar.</li>
+                    <li><code>option_a / b / c / d</code> (<code>varchar(255)</code>): Pilihan opsi ganda.</li>
+                    <li><code>correct_answer</code> (<code>char(1)</code>): Kunci jawaban benar (bernilai 'A', 'B', 'C', atau 'D').</li>
+                </ul>
+            </li>
+            <li style="margin-top: 10px;"><strong>Tabel <code>quiz_results</code>:</strong>
+                <ul>
+                    <li><code>id</code> (<code>bigint unsigned</code>, PK): Identitas unik hasil pengerjaan kuis.</li>
+                    <li><code>user_id</code> (<code>bigint unsigned</code>, FK): Merujuk ke tabel <code>users.id</code> (Cascade Delete).</li>
+                    <li><code>category_id</code> (<code>bigint unsigned</code>, FK): Merujuk ke tabel <code>categories.id</code> (Cascade Delete).</li>
+                    <li><code>total_questions</code> (<code>int</code>): Jumlah butir soal kuis.</li>
+                    <li><code>correct_answers</code> (<code>int</code>): Jumlah jawaban benar siswa.</li>
+                    <li><code>score</code> (<code>int</code>): Nilai kuis akhir siswa skala 0-100.</li>
+                    <li><code>answers</code> (<code>text</code>, Nullable): JSON data jawaban terpilih siswa (id_soal => jawaban) untuk diulas kembali.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3 style="color: var(--primary-light); font-size: 16px; margin-top: 15px;">B. Penjelasan Hubungan Relasi (Cardinality)</h3>
+        <ul style="margin-left: 20px;">
+            <li><strong>Relasi users ke quiz_results (One-to-Many / 1:N):</strong> Satu Siswa dapat memiliki banyak data riwayat hasil kuis karena diperbolehkan mengerjakan kuis berkali-kali. Namun, satu rekaman hasil kuis hanya dimiliki oleh tepat satu orang Siswa.</li>
+            <li><strong>Relasi categories ke questions (One-to-Many / 1:N):</strong> Satu Kategori pelajaran memuat banyak butir pertanyaan soal di bank soal. Setiap butir soal hanya ditugaskan ke dalam satu Kategori pelajaran.</li>
+            <li><strong>Relasi categories ke quiz_results (One-to-Many / 1:N):</strong> Satu Kategori kuis dapat dikerjakan dalam banyak sesi oleh berbagai siswa, namun satu rekaman hasil kuis hanya merujuk ke satu Kategori yang dikerjakan pada sesi itu.</li>
+        </ul>
+    </div>
+
+    <!-- BAB 4: DESAIN ANTARMUKA -->
+    <div class="page-break">
+        <h1>BAB 4: DESAIN ANTARMUKA</h1>
+        
+        <h2>4.1 Konsep Desain</h2>
+        <p>Desain visual MindClash dirancang dengan mengedepankan prinsip kenyamanan mata dan kemudahan interaksi siswa. Tema gelap yang modern dikombinasikan dengan efek neon keunguan memberikan getaran "e-sports" yang disukai siswa, sehingga proses belajar terasa menyenangkan layaknya bermain gim. Elemen penting seperti sisa waktu pengerjaan diletakkan di bagian atas agar mudah terpantau tanpa mengganggu fokus membaca soal.</p>
+
+        <h2>4.2 Mockup / Wireframe</h2>
+        <p>Berikut adalah rancangan mockup dan wireframe tata letak dari antarmuka halaman utama aplikasi web MindClash:</p>
+
+        <h3 style="color: var(--primary-light); font-size: 16px; margin-top: 15px;">A. Halaman Login</h3>
+        <p>Desain antarmuka halaman masuk (*login page*) siswa dan admin:</p>
+        <img src="report_images/login.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Mockup Halaman Login">
+
+        <h3 style="color: var(--primary-light); font-size: 16px;">B. Halaman Dashboard Utama Siswa</h3>
+        <p>Desain dasbor utama siswa setelah berhasil masuk ke sistem:</p>
+        <img src="report_images/dashboard.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Mockup Halaman Dashboard">
+
+        <h3 style="color: var(--primary-light); font-size: 16px;">C. Halaman Pengerjaan Kuis</h3>
+        <p>Desain antarmuka pengerjaan kuis interaktif dengan timer dan progress bar:</p>
+        <img src="report_images/quiz.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Mockup Halaman Kuis">
+
+        <h3 style="color: var(--primary-light); font-size: 16px;">D. Halaman Peringkat Kelas (Leaderboard)</h3>
+        <p>Desain antarmuka peringkat kelas siswa:</p>
+        <img src="report_images/leaderboard.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Mockup Peringkat Kelas">
+
+        <h2>4.3 Deskripsi Tampilan</h2>
+        <p>Berikut adalah tampilan nyata (*screenshot* asli) dari antarmuka aplikasi web **MindClash** beserta rincian elemen penting yang disajikan:</p>
+
+        <h3 style="color: var(--primary-light); font-size: 16px;">A. Tampilan Halaman Dashboard Siswa</h3>
+        <p>Dasbor utama menyajikan menu pemilihan kategori kuis secara visual dan ringkasan statistik belajar siswa:</p>
+        <img src="report_images/dashboard.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Tampilan Dashboard Siswa">
+
+        <h3 style="color: var(--primary-light); font-size: 16px;">B. Tampilan Halaman Pengerjaan Kuis</h3>
+        <p>Halaman ini menampilkan butir soal kuis secara interaktif per halaman dengan visualisasi sisa waktu hitung mundur dan kemajuan kuis:</p>
+        <img src="report_images/quiz.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Tampilan Halaman Kuis">
+
+        <h3 style="color: var(--primary-light); font-size: 16px;">C. Tampilan Peringkat Kelas (Leaderboard)</h3>
+        <p>Leaderboard menyajikan rangking kompetisi antarsiswa sekelas secara transparan berdasarkan rata-rata nilai kuis:</p>
+        <img src="report_images/leaderboard.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Tampilan Peringkat Kelas">
+
+        <h3 style="color: var(--primary-light); font-size: 16px;">D. Tampilan Dasbor Admin</h3>
+        <p>Halaman manajemen admin untuk mengontrol soal, kategori, riwayat kuis siswa, dan cetak PDF:</p>
+        <img src="report_images/admin_dashboard.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Tampilan Dasbor Admin">
+
+        <p style="margin-top: 15px;">Penjelasan detail fungsi bagian-bagian antarmuka kuis:</p>
+        <ul style="margin-left: 20px;">
+            <li><strong>Timer Hitung Mundur:</strong> Berada di sudut kanan atas kuis. Berwarna merah neon jika waktu kurang dari 2 menit untuk memberikan peringatan visual kepada siswa.</li>
+            <li><strong>Progress Bar Dinamis:</strong> Lebar bar akan menyesuaikan persentase soal yang sedang dikerjakan terhadap jumlah keseluruhan soal, memberikan sensasi pencapaian yang jelas bagi siswa.</li>
+            <li><strong>Pilihan Kartu Jawaban:</strong> Pilihan jawaban didesain sebagai box berukuran besar (bukan sekadar lingkaran kecil) agar mudah di-klik/sentuh pada layar smartphone. Ketika di-klik, border box akan berubah menjadi ungu bersinar dan latar belakangnya berubah semi-transparan.</li>
+            <li><strong>Review Koreksi Jawaban:</strong> Halaman yang merangkum hasil kerja siswa dengan kode warna tegas. Warna merah menunjukkan jawaban siswa yang salah dengan koreksi kunci jawaban di sebelahnya, dan warna hijau menandakan jawaban benar.</li>
+        </ul>
+    </div>
+
+    <!-- BAB 5: IMPLEMENTASI DASAR -->
+    <div class="page-break">
+        <h1>BAB 5: IMPLEMENTASI DASAR</h1>
+        
+        <h2>5.1 Tools dan Teknologi</h2>
+        <p>Aplikasi diimplementasikan dengan spesifikasi teknologi terkini:</p>
+        <ul>
+            <li><strong>Backend Server:</strong> PHP 8.2 & Laravel 12.0 (menyediakan sistem MVC, ORM, migrasi database, autentikasi, serta routing middleware).</li>
+            <li><strong>Frontend Styling:</strong> Tailwind CSS v4.0 (menyediakan class utility untuk penataan UI responsif bertema Dark Mode secara cepat).</li>
+            <li><strong>Kompilator Aset:</strong> Vite (mempermudah proses kompilasi kode CSS & JS secara real-time saat pengembangan).</li>
+            <li><strong>Basis Data:</strong> MySQL/SQLite (menyimpan seluruh tabel relasional kuis).</li>
+            <li><strong>PDF Generator:</strong> barryvdh/laravel-dompdf (digunakan untuk ekspor laporan data hasil kuis oleh Admin).</li>
+        </ul>
+
+        <h2>5.2 Struktur Folder Proyek</h2>
+        <p>Susunan berkas dan folder penting proyek MindClash disajikan di bawah ini:</p>
+        
+        <div class="folder-tree">
+            proyek1Mindclash/<br>
+            ├── app/ <span class="comment">// Folder Logika PHP</span><br>
+            │   ├── Http/Controllers/<br>
+            │   │   ├── AuthController.php <span class="comment">// Logika Login/Daftar</span><br>
+            │   │   ├── UserController.php <span class="comment">// Dasbor Kuis & Leaderboard Siswa</span><br>
+            │   │   ├── QuestionController.php <span class="comment">// CRUD Soal Admin</span><br>
+            │   │   ├── CategoryController.php <span class="comment">// CRUD Kategori Admin</span><br>
+            │   │   ├── ReportController.php <span class="comment">// Cetak PDF Laporan</span><br>
+            │   │   └── SettingController.php <span class="comment">// Manajemen Profil</span><br>
+            │   └── Models/ <span class="comment">// Representasi Database (Eloquent)</span><br>
+            │       ├── User.php<br>
+            │       ├── Category.php<br>
+            │       ├── Question.php<br>
+            │       └── QuizResult.php<br>
+            ├── database/migrations/ <span class="comment">// Skema Tabel Database (9 file)</span><br>
+            ├── database/seeders/DatabaseSeeder.php <span class="comment">// Data Awal Simulasi</span><br>
+            ├── resources/views/ <span class="comment">// File Antarmuka (.blade.php)</span><br>
+            │   ├── admin/ <span class="comment">// Halaman Khusus Manajemen Admin</span><br>
+            │   ├── auth/ <span class="comment">// Halaman Login & Registrasi</span><br>
+            │   ├── layouts/ <span class="comment">// Layout Master Induk</span><br>
+            │   └── user/ <span class="comment">// Halaman Kuis, Hasil & Peringkat Siswa</span><br>
+            └── routes/web.php <span class="comment">// Definisi Rute Web</span>
+        </div>
+
+        <h2>5.3 Petunjuk Menjalankan Aplikasi</h2>
+        <p>Berikut langkah singkat untuk memasang aplikasi MindClash di komputer lokal Anda:</p>
+        <ol>
+            <li>Unduh dan salin folder proyek <code>proyek1Mindclash</code> ke direktori web server (seperti <code>C:\laragon\www\</code>).</li>
+            <li>Buka command prompt / terminal pada folder tersebut, jalankan perintah instal dependensi PHP dan JS:
+                <pre style="background: #090d16; padding: 10px; margin-top: 5px; border-radius: 4px; color: #a78bfa;">composer install && npm install</pre>
+            </li>
+            <li>Buat berkas konfigurasi lokal <code>.env</code> dengan menyalin berkas contoh:
+                <pre style="background: #090d16; padding: 10px; margin-top: 5px; border-radius: 4px; color: #a78bfa;">copy .env.example .env</pre>
+            </li>
+            <li>Sesuaikan konfigurasi database (DB_DATABASE, DB_USERNAME, DB_PASSWORD) pada file <code>.env</code> tersebut, lalu ketik perintah penyiapan kunci keamanan aplikasi:
+                <pre style="background: #090d16; padding: 10px; margin-top: 5px; border-radius: 4px; color: #a78bfa;">php artisan key:generate</pre>
+            </li>
+            <li>Buat database baru di DBMS Anda dengan nama yang disesuaikan pada file .env (contoh: <code>proyek1mindclash</code>). Setelah itu jalankan migrasi tabel dan seeding data simulasi kuis:
+                <pre style="background: #090d16; padding: 10px; margin-top: 5px; border-radius: 4px; color: #a78bfa;">php artisan migrate --seed</pre>
+            </li>
+            <li>Jalankan server pengembangan Laravel dan compile Tailwind CSS:
+                <pre style="background: #090d16; padding: 10px; margin-top: 5px; border-radius: 4px; color: #a78bfa;">php artisan serve (di tab terminal 1)<br>npm run dev (di tab terminal 2)</pre>
+            </li>
+            <li>Buka browser Anda dan akses halaman <code>http://127.0.0.1:8000</code>. Masuk dengan akun siswa: <strong>rani@test.com</strong> / password: <strong>password123</strong>, atau akun admin: <strong>admin@test.com</strong> / password: <strong>admin123</strong>.</li>
+        </ol>
+    </div>
+
+    <!-- BAB 6: PENUTUP -->
+    <div class="page-break">
+        <h1>BAB 6: PENUTUP</h1>
+        
+        <h2>6.1 Kesimpulan</h2>
+        <p>Berdasarkan pengerjaan Proyek 1 aplikasi MindClash, dapat ditarik beberapa kesimpulan utama:</p>
+        <ol>
+            <li>Aplikasi kuis pembelajaran interaktif berbasis web <strong>MindClash</strong> berhasil diselesaikan sepenuhnya (100% progres) dengan memanfaatkan sinergi arsitektur MVC Laravel 12 dan Tailwind CSS.</li>
+            <li>Aplikasi ini sukses mengintegrasikan komponen gamifikasi dasar seperti penayangan visual sisa waktu (timer), progress bar, peninjauan ulasan jawaban yang salah secara instan, serta pemantauan peringkat (leaderboard) kelas siswa yang berjalan dinamis.</li>
+            <li>Berdasarkan rancangan, aplikasi ini mampu menjadi media belajar mandiri yang menarik bagi siswa SMP berkat antarmuka bertema gelap (Dark Mode) modern yang menyerupai gim kompetitif, mengurangi kejenuhan belajar pasif yang monoton.</li>
+            <li>Sistem manajemen admin berhasil dikembangkan untuk memfasilitasi kebutuhan guru dalam mengelola kategori mata pelajaran, bank soal kuis, data siswa, hingga pencetakan laporan nilai kelas dalam format PDF.</li>
+        </ol>
+
+        <h2>6.2 Saran Pengembangan</h2>
+        <p>Pengembangan sistem kuis di masa depan dapat diperluas pada aspek-aspek berikut:</p>
+        <ol>
+            <li><strong>Pengembangan Modul Nyawa (Survival Mode) secara Penuh:</strong> Menyediakan skema basis data tersendiri untuk menguji siswa dalam mode bertahan hidup, di mana sesi pengerjaan kuis siswa akan langsung dihentikan oleh server jika menjawab salah sebanyak 3 kali berturut-turut.</li>
+            <li><strong>Integrasi Lencana (Badges) Otomatis:</strong> Membuat program logika database trigger untuk menyematkan lencana penghargaan pada profil siswa secara otomatis saat memecahkan rekor nilai kuis tertentu.</li>
+            <li><strong>Modul Cerdas Cermat Real-time (Duel Mode):</strong> Menambahkan pustaka WebSocket (misalnya Laravel Reverb) untuk memfasilitasi duel kuis antar siswa secara langsung di kelas secara real-time.</li>
+            <li><strong>Penerapan Progressive Web App (PWA):</strong> Mengkonversi aplikasi web agar dapat diinstal di smartphone siswa secara mandiri demi kemudahan akses.</li>
+        </ol>
+    </div>
+
+    <!-- DAFTAR PUSTAKA -->
+    <div class="page-break">
+        <h1>Daftar Pustaka</h1>
+        <br>
+        <div class="references-list">
+            <p>[1] H. P. Adi and N. F. Ramadhani, "Pemanfaatan Metode Game Based Learning sebagai Upaya Peningkatan Minat dan Motivasi Belajar," <i>Cemerlang: Multidisciplinary Science Journal</i>, vol. 2, no. 1, pp. 12-25, 2024.</p>
+            <p>[2] A. S. Kania, A. Pratiwi, and R. S. Hayati, "Efektivitas Penggunaan Quizizz sebagai Media Evaluasi Interaktif pada Materi Informatika di SMP Negeri 1 Sanrobone," <i>Jurnal Komputer dan Informatika</i>, vol. 9, no. 1, pp. 490-499, 2026.</p>
+            <p>[3] M. S. Wibawa, "Pengaruh Media Pembelajaran Interaktif terhadap Hasil Belajar Siswa," <i>Jurnal Pendidikan Teknologi dan Kejuruan</i>, vol. 22, no. 2, pp. 145-155, 2024.</p>
+            <p>[4] A. A. Fauzi, F. Nugroho, W. Putra, and Y. A. Pratama, "Analisis dan Perbandingan Media Interaktif Kahoot dan Quizizz dalam Kemudahan Pembelajaran," <i>Jurnal Informatika dan Rekayasa Perangkat Lunak</i>, vol. 3, no. 1, pp. 88-95, 2025.</p>
+            <p>[5] D. T. Wahyuni, S. Purwati, and U. Mulawarman, "Pengaruh Penggunaan Media Pembelajaran Interaktif Zep Quiz dalam Model Game Based Learning (GBL) terhadap Motivasi dan Hasil Belajar Kognitif Siswa pada Pembelajaran IPA Kelas VII SMP," <i>Jurnal Pendidikan Sains Indonesia</i>, vol. 14, no. 2, pp. 4366-4370, 2026.</p>
+        </div>
+    </div>
+
+    <!-- BACK COVER PAGE (PAGE 13) -->
+    <div class="page-break" style="padding: 15mm; min-height: 297mm; background: #047857; color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; position: relative; border: none; overflow: hidden; page-break-after: avoid;">
+        
+        <!-- App Title Header (Top Left) -->
+        <div style="display: flex; align-items: center; justify-content: flex-start; gap: 10px; z-index: 10; margin-top: 10px;">
+            <svg width="35" height="35" viewBox="0 0 100 100" style="flex-shrink: 0;">
+                <path d="M50 10 L80 25 V55 C80 75 50 90 50 90 C50 90 20 75 20 55 V25 L50 10 Z" fill="#ffffff"/>
+                <path d="M50 25 C40 25 35 32 35 40 C35 48 42 48 42 55 C42 60 38 65 45 65 C48 65 50 62 50 60 C50 62 52 65 55 65 C62 65 58 60 58 55 C58 48 65 48 65 40 C65 32 60 25 50 25 Z" fill="#047857"/>
+                <path d="M50 35 L42 50 H50 L48 62 L58 47 H50 L52 35 Z" fill="#ffffff"/>
+            </svg>
+            <span style="font-family: Arial, sans-serif; font-size: 28px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px;">MindClash</span>
+        </div>
+
+        <!-- Phone illustration floating in background -->
+        <div style="position: absolute; right: -40px; top: 180px; width: 220px; height: 440px; background: rgba(0, 0, 0, 0.4); border-radius: 36px; padding: 8px; border: 3px solid rgba(255,255,255,0.2); z-index: 5; transform: rotate(-8deg); opacity: 0.85;">
+            <div style="width: 100%; height: 100%; border-radius: 28px; overflow: hidden; background: #0f172a;">
+                <img src="report_images/dashboard.png" style="width: 100%; height: 100%; object-fit: cover; border: none; margin: 0;">
+            </div>
+        </div>
+
+        <!-- Center Content -->
+        <div style="z-index: 10; margin-top: 50px; text-align: left; max-width: 500px; font-family: Arial, sans-serif;">
+            
+            <div style="font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; color: #ffffff; border-bottom: 2px solid #ffffff; padding-bottom: 10px; display: inline-block;">Sekilas Dokumen Aplikasi</div>
+            <p class="no-indent" style="font-size: 13.5px; line-height: 1.6; color: rgba(255, 255, 255, 0.95); margin-bottom: 30px; text-align: justify; text-indent: 0;">
+                Buku ini merupakan dokumen spesifikasi kebutuhan perangkat lunak, perancangan arsitektur, dan laporan implementasi dasar untuk aplikasi <strong>MindClash</strong>. Aplikasi ini dikembangkan sebagai solusi media evaluasi pembelajaran interaktif berbasis web dengan pendekatan gamifikasi intensif bagi siswa sekolah menengah, menggunakan framework Laravel 12 dan styling Tailwind CSS v4.0.
+            </p>
+
+            <div style="font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; color: #ffffff;">Isi Dokumen</div>
+            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px; color: rgba(255, 255, 255, 0.9);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">1</span>
+                    <strong>Pendahuluan:</strong> Latar belakang, ide dasar aplikasi, tujuan, dan batasan ruang lingkup.
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">2</span>
+                    <strong>Deskripsi Sistem:</strong> Stakeholder, fungsionalitas utama, dan aspek non-fungsional sistem.
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">3</span>
+                    <strong>Perancangan Sistem:</strong> Arsitektur MVC, diagram workflow, class diagram, dan tipe data ERD.
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">4</span>
+                    <strong>Desain Antarmuka:</strong> Konsep UI, visualisasi mockup/wireframe, dan penjelasan detail elemen.
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">5</span>
+                    <strong>Implementasi Dasar:</strong> Tools teknologi, struktur direktori folder, dan instalasi aplikasi.
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">6</span>
+                    <strong>Penutup:</strong> Ringkasan pencapaian proyek 100% dan rekomendasi saran pengembangan.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Quote Block -->
+        <div style="background: rgba(255, 255, 255, 0.1); border-left: 4px solid #ffffff; padding: 12px 18px; border-radius: 4px; z-index: 10; margin-top: 30px; font-family: Arial, sans-serif; max-width: 480px;">
+            <p class="no-indent" style="font-size: 13px; font-style: italic; color: #ffffff; line-height: 1.4; margin: 0; text-indent: 0;">
+                "Kuis interaktif, belajar asyik, dan membangun iklim kompetisi sehat bagi para generasi masa depan bangsa adalah komitmen utama kami."
+            </p>
+        </div>
+
+        <!-- Bottom Footer (White ULBI logo + Barcode) -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 15px; margin-top: 30px; z-index: 10; font-family: Arial, sans-serif;">
+            
+            <!-- Left Logo -->
+            <div style="display: flex; align-items: center; text-align: left;">
+                <svg width="45" height="45" viewBox="0 0 120 120" style="margin-right: 10px; flex-shrink: 0;">
+                    <!-- central hexagon -->
+                    <polygon points="60,48 70,54 70,66 60,72 50,66 50,54" fill="#ffffff"/>
+                    <!-- 6 surrounding hexagons -->
+                    <polygon points="60,20 70,26 70,38 60,44 50,38 50,26" fill="#ffffff"/>
+                    <polygon points="60,76 70,82 70,94 60,100 50,94 50,82" fill="#ffffff"/>
+                    <polygon points="84,34 94,40 94,52 84,58 74,52 74,40" fill="#ffffff"/>
+                    <polygon points="84,62 94,68 94,80 84,86 74,80 74,68" fill="#ffffff"/>
+                    <polygon points="36,34 46,40 46,52 36,58 26,52 26,40" fill="#ffffff"/>
+                    <polygon points="36,62 46,68 46,80 36,86 26,80 26,68" fill="#ffffff"/>
+                </svg>
+                <div>
+                    <div style="font-size: 10px; font-weight: bold; text-transform: uppercase; color: #ffffff;">Dokumen ini milik Program Studi</div>
+                    <div style="font-size: 13px; font-weight: bold; color: #ffffff; text-transform: uppercase;">D4 Teknik Informatika ULBI</div>
+                    <div style="font-size: 9px; color: rgba(255,255,255,0.85); margin-top: 1px;">Sebagai produk hasil pembelajaran Proyek 1.</div>
+                </div>
+            </div>
+
+            <!-- Right Barcode Block -->
+            <div style="background: #ffffff; color: #000000; padding: 6px 12px; border-radius: 4px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); width: 180px;">
+                <div style="font-size: 8px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; color: #374151; margin-bottom: 2px;">Proyek 1 - MindClash</div>
+                <!-- Simulated Barcode Lines SVG -->
+                <svg width="150" height="30" viewBox="0 0 150 30" style="border: none; margin: 3px auto;">
+                    <!-- Quiet zone -->
+                    <rect x="0" y="0" width="150" height="30" fill="#ffffff"/>
+                    <!-- Barcode lines -->
+                    <rect x="5" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="9" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="12" y="0" width="3" height="30" fill="#000000"/>
+                    <rect x="17" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="20" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="25" y="0" width="4" height="30" fill="#000000"/>
+                    <rect x="31" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="35" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="39" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="42" y="0" width="3" height="30" fill="#000000"/>
+                    <rect x="47" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="52" y="0" width="1" height="30" fill="#000000"/>
+                    <!-- guard center -->
+                    <rect x="55" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="57" y="0" width="1" height="30" fill="#000000"/>
+                    <!-- right side -->
+                    <rect x="60" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="64" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="67" y="0" width="4" height="30" fill="#000000"/>
+                    <rect x="73" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="77" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="80" y="0" width="3" height="30" fill="#000000"/>
+                    <rect x="85" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="88" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="92" y="0" width="4" height="30" fill="#000000"/>
+                    <rect x="98" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="101" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="105" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="108" y="0" width="3" height="30" fill="#000000"/>
+                    <rect x="113" y="0" width="2" height="30" fill="#000000"/>
+                    <!-- guard end -->
+                    <rect x="117" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="121" y="0" width="1" height="30" fill="#000000"/>
+                    <!-- fake extra barcode pattern -->
+                    <rect x="124" y="0" width="2" height="30" fill="#000000"/>
+                    <rect x="128" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="131" y="0" width="3" height="30" fill="#000000"/>
+                    <rect x="136" y="0" width="1" height="30" fill="#000000"/>
+                    <rect x="139" y="0" width="2" height="30" fill="#000000"/>
+                </svg>
+                <div style="font-size: 8px; font-weight: bold; letter-spacing: 1.5px; color: #111827; margin-top: 1px;">9 786238 457893</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

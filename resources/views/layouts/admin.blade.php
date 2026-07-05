@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('page_title', 'Dashboard Admin - MindClash')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -124,11 +126,64 @@
             background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
             border-radius: 2px;
         }
+
+        /* Mobile Responsive Media Query */
+        @media (max-width: 991px) {
+            .sidebar {
+                left: -280px;
+                transition: left 0.3s ease-in-out;
+                z-index: 1050;
+                box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .content {
+                margin-left: 0 !important;
+                padding: 80px 20px 20px 20px !important;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(15, 23, 42, 0.6);
+                backdrop-filter: blur(4px);
+                z-index: 1040;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header .user-info {
+                align-self: flex-start;
+            }
+        }
         
         @stack('styles')
     </style>
 </head>
 <body>
+
+<!-- Mobile Hamburger Toggle -->
+<button class="btn d-lg-none" id="sidebarToggle" style="position: fixed; top: 15px; left: 15px; z-index: 1060; background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4); color: #a78bfa; border-radius: 8px; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+    <i class="fas fa-bars" style="font-size: 20px;"></i>
+</button>
+
+<!-- Backdrop Overlay for Mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <div class="sidebar">
     <div class="logo">
@@ -161,7 +216,14 @@
             <i class="fas fa-cog"></i>
             Pengaturan
         </a>
-        <a href="/logout" style="margin-top: 40px; color: #ef4444;">
+        
+        <!-- Back Navigation to User Quiz Page -->
+        <a href="/quiz-home" style="margin-top: 20px; color: #38bdf8; border-top: 1px solid rgba(139, 92, 246, 0.2); padding-top: 20px;">
+            <i class="fas fa-arrow-left"></i>
+            Kembali ke Beranda
+        </a>
+        
+        <a href="/logout" style="color: #ef4444;">
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </a>
@@ -193,6 +255,27 @@
 </div>
 
 @stack('scripts')
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    if (toggleBtn && sidebar && overlay) {
+        toggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+        });
+        
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+    }
+});
+</script>
 
 </body>
 </html>

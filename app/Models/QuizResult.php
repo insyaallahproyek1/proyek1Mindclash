@@ -12,6 +12,7 @@ class QuizResult extends Model
     protected $fillable = [
         'user_id',
         'category_id',
+        'room_id',
         'total_questions',
         'correct_answers',
         'score',
@@ -21,6 +22,14 @@ class QuizResult extends Model
     protected $casts = [
         'answers' => 'array',
     ];
+
+    /**
+     * Get the room for this quiz result.
+     */
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
+    }
 
     /**
      * Get the user that owns this quiz result.
