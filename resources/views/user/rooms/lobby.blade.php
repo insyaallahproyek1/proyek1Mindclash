@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 data.members.forEach(member => {
                     // Check if host
-                    const isHost = member.name === "{{ $room->host->name }}";
+                    const isHost = member.id === hostId;
                     const avatarLetter = member.name.substring(0, 1);
 
                     const itemHtml = `

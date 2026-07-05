@@ -41,6 +41,12 @@ class RoomController extends Controller
             'category_id.required' => 'Pilih kategori terlebih dahulu.',
         ]);
 
+        // Ensure category has questions to avoid infinite loop
+        $category = Category::withCount('questions')->findOrFail($request->category_id);
+        if ($category->questions_count === 0) {
+            return back()->withErrors(['category_id' => 'Kategori yang dipilih tidak memiliki soal.'])->withInput();
+        }
+
         // Generate unique 6 digit code
         do {
             $code = strval(rand(100000, 999999));
@@ -120,6 +126,7 @@ class RoomController extends Controller
             'status' => $room->status,
             'members' => $room->users->map(function($user) {
                 return [
+                    'id' => $user->id,
                     'name' => $user->name,
                     'class' => $user->class,
                 ];

@@ -231,12 +231,12 @@ Mengembangkan platform pembelajaran interaktif berbasis gamifikasi intensif yang
 1. **Mengimplementasikan Sistem Nyawa sebagai Elemen Gamifikasi:** Menerapkan mekanisme sistem nyawa pada mode bertahan hidup sebagai instrumen gamifikasi intensif yang memberikan dorongan psikologis positif, mendorong siswa untuk lebih berhati-hati dalam menjawab, serta melatih kemampuan berpikir kritis dan evaluasi diri ketika terjadi kesalahan.
 2. **Menyediakan Umpan Balik Kontekstual Setelah Setiap Soal:** Membangun sistem visualisasi umpan balik langsung berupa penjelasan konteks setelah setiap soal dijawab, sehingga proses belajar tetap berlangsung secara bermakna dan siswa tidak hanya sekadar mengetahui jawaban yang benar, tetapi juga memahami alasan di baliknya.
 
-### **1.4 Ruang Lingkup**
-1. **Fokus Penelitian:** Penelitian ini berfokus pada pengembangan sistem informasi kuis pembelajaran interaktif berbasis web yang diberi nama MindClash, dengan sub-tema "Solusi Pembelajaran Interaktif Saat Ini Melalui Pendekatan Gamifikasi yang Intensif". Penelitian ini bertujuan untuk menyediakan media evaluasi dan pembelajaran mandiri secara asinkron yang mendalam bagi siswa, dengan mengimplementasikan arsitektur monolitik terstruktur menggunakan teknologi PHP sebagai backend (pengelola logika bisnis dan basis data relasional) serta Blade dan JavaScript vanilla sebagai frontend (antarmuka pengguna yang responsif).
-2. **Batasan Sistem MindClash:** Sistem ini dirancang untuk mengintegrasikan elemen gamifikasi intensif yang mencakup fitur sistem nyawa (mode bertahan hidup), umpan balik langsung berupa penjelasan konteks setelah setiap soal, pengelolaan papan peringkat (leaderboard), dan pencapaian lencana (badges). Cakupan pengembangan sistem ini terbatas pada platform aplikasi web dan tidak mencakup pengembangan aplikasi mobile. Selain itu, sistem ini difokuskan pada metode belajar mandiri, sehingga tidak memfasilitasi fitur multipemain langsung secara langsung (real-time multiplayer antar-pengguna).
+#### **1.4 Ruang Lingkup**
+1. **Fokus Penelitian:** Penelitian ini berfokus pada pengembangan sistem informasi kuis pembelajaran interaktif berbasis web yang diberi nama MindClash, dengan sub-tema "Solusi Pembelajaran Interaktif Saat Ini Melalui Pendekatan Gamifikasi yang Intensif". Penelitian ini bertujuan untuk menyediakan media evaluasi dan pembelajaran mandiri secara asinkron serta kompetitif yang mendalam bagi siswa, dengan mengimplementasikan arsitektur monolitik terstruktur menggunakan teknologi PHP sebagai backend (pengelola logika bisnis dan basis data relasional) serta Blade dan JavaScript vanilla sebagai frontend (antarmuka pengguna yang responsif).
+2. **Batasan Sistem MindClash:** Sistem ini dirancang untuk mengintegrasikan elemen gamifikasi intensif yang mencakup fitur sistem nyawa (mode bertahan hidup), umpan balik langsung berupa penjelasan konteks setelah setiap soal, pengelolaan papan peringkat (leaderboard), pencapaian lencana (badges), serta **multiplayer room kuis** untuk pengerjaan kuis bersama. Cakupan pengembangan sistem ini terbatas pada platform aplikasi web dan tidak mencakup pengembangan aplikasi mobile.
 3. **Aktor Sistem:** Pengguna yang terlibat di dalam sistem ini dibatasi pada 2 (dua) peran utama dengan hak akses sebagai berikut:
    * **Admin:** Pihak yang bertanggung jawab penuh dalam mengelola seluruh data sistem melalui fitur CRUD (Buat, Baca, Perbarui, dan Hapus), yang meliputi manajemen data soal kuis, pemantauan riwayat sesi permainan, pengelolaan akumulasi skor papan peringkat, serta pengaturan pencapaian lencana.
-   * **Siswa (Pengguna):** Pengguna yang memanfaatkan platform secara mandiri untuk mengakses kuis, memilih mode bertahan hidup, menerima umpan balik/penjelasan konteks soal, melihat peringkat pada leaderboard, serta melacak lencana pencapaian yang telah diperoleh.
+   * **Siswa (Pengguna):** Pengguna yang memanfaatkan platform secara mandiri untuk mengakses kuis (mode bertahan hidup maupun pengerjaan bersama melalui multiplayer room), menerima umpan balik/penjelasan konteks soal, melihat peringkat pada leaderboard, serta melacak lencana pencapaian yang telah diperoleh.
 
 ---
 <div style="page-break-after: always;"></div>
@@ -256,7 +256,7 @@ Berdasarkan batasan aktor sistem yang telah dijelaskan pada sub-bab Ruang Lingku
 | No | Aktor / User | Deskripsi | Hak Akses |
 | :-: | :--- | :--- | :--- |
 | **1** | **Admin** | Pihak yang bertanggung jawab penuh dalam mengelola seluruh data dan konten di dalam sistem MindClash. | a. Melakukan CRUD (Buat, Baca, Perbarui, Hapus) data soal kuis dan kategori.<br>b. Memantau riwayat sesi permainan siswa.<br>c. Mengelola akumulasi skor pada leaderboard.<br>d. Mengatur pencapaian lencana (badges). |
-| **2** | **Siswa (Pengguna)** | Pengguna akhir yang memanfaatkan aplikasi secara mandiri sebagai media belajar sekaligus berkompetisi. | a. Mengakses dan mengerjakan kuis berdasarkan kategori pelajaran.<br>b. Memilih Mode Bertahan Hidup/Kuis Terjadwal.<br>c. Menerima umpan balik/penjelasan konteks setelah menjawab kuis.<br>d. Melihat posisi dan peringkat pada leaderboard kelas.<br>e. Melacak lencana pencapaian (badges) yang diperoleh. |
+| **2** | **Siswa (Pengguna)** | Pengguna akhir yang memanfaatkan aplikasi sebagai media belajar mandiri sekaligus berkompetisi dengan rekan sejawat. | a. Mengakses dan mengerjakan kuis berdasarkan kategori pelajaran.<br>b. Memilih Mode Bertahan Hidup/Kuis Terjadwal.<br>c. Menerima umpan balik/penjelasan konteks setelah menjawab kuis.<br>d. Melihat posisi dan peringkat pada leaderboard kelas.<br>e. Melacak lencana pencapaian (badges) yang diperoleh.<br>f. Membuat dan bergabung dengan ruang kuis kompetitif bersama (*Multiplayer Room*). |
 
 ### **2.3 Kebutuhan Fungsional**
 Kebutuhan fungsional merupakan fitur-fitur utama yang harus disediakan oleh sistem MindClash agar dapat berjalan sesuai dengan tujuan dan ruang lingkup yang telah ditetapkan. Berdasarkan pembagian aktor pada sub-bab sebelumnya, kebutuhan fungsional dikelompokkan menjadi 2 (dua) bagian, yaitu kebutuhan fungsional untuk Admin dan kebutuhan fungsional untuk Siswa (Pengguna).
@@ -275,6 +275,9 @@ Kebutuhan fungsional merupakan fitur-fitur utama yang harus disediakan oleh sist
 4. Sistem dapat menyimpan hasil pengerjaan kuis siswa secara otomatis saat waktu pengerjaan habis.
 5. Sistem dapat menampilkan riwayat pengerjaan kuis beserta review detail jawaban yang benar dan salah.
 6. Sistem dapat menampilkan posisi dan peringkat pengguna secara berkala pada papan peringkat (leaderboard) berdasarkan kelas masing-masing.
+7. Sistem dapat memfasilitasi pembuatan ruang kuis kompetitif bersama (*Multiplayer Room*) dengan kode akses unik.
+8. Sistem dapat menampilkan ruang tunggu (*Lobby Room*) multiplayer berisi daftar peserta kuis.
+9. Sistem dapat menampilkan papan peringkat khusus (*Room Leaderboard*) yang merangkum nilai kuis room secara real-time.
 
 ### **2.4 Kebutuhan Non-Fungsional**
 Kebutuhan non-fungsional merupakan kebutuhan yang berkaitan dengan kualitas dan karakteristik operasional sistem MindClash, di luar fitur-fitur utama yang telah dijabarkan pada sub-bab sebelumnya. Berdasarkan arsitektur dan teknologi yang digunakan dalam pengembangan aplikasi, kebutuhan non-fungsional MindClash dikelompokkan menjadi 3 (tiga) aspek, yaitu kecepatan sistem, kemudahan penggunaan, dan keamanan sederhana.
@@ -299,7 +302,9 @@ Kebutuhan non-fungsional merupakan kebutuhan yang berkaitan dengan kualitas dan 
 
 # **BAB 3: PERANCANGAN SISTEM**
 
-### **3.1 Arsitektur Sistem**
+### **3.1 Arsitektur & Deployment Sistem**
+
+#### **3.1.1 Arsitektur Sistem**
 Aplikasi **MindClash** menggunakan pola arsitektur **Model-View-Controller (MVC)** yang ditawarkan oleh framework Laravel. Sistem ini dikembangkan secara monolitik modern, di mana backend dan frontend terintegrasi dalam satu repositori namun dipisahkan secara logis. Komunikasi antara frontend (klien) dan backend (server) dilakukan melalui protokol HTTP/HTTPS.
 
 Berikut adalah diagram blok hubungan arsitektur sistem MindClash:
@@ -334,8 +339,81 @@ graph TD
 * **Server-Side (Laravel):** Router menerima permintaan dari browser, memfilternya melalui middleware (untuk pengecekan login dan hak akses admin/user), lalu meneruskannya ke Controller yang bersesuaian. Controller akan memproses logika bisnis dan berinteraksi dengan basis data melalui Eloquent ORM.
 * **Database Layer:** Menyimpan seluruh data secara terstruktur, termasuk profil pengguna, daftar pertanyaan, pengelompokan kategori, dan riwayat hasil kuis.
 
-### **3.2 Workflow Sistem**
-Berikut merupakan alur kerja (workflow) utama sistem untuk aktor Siswa saat mengerjakan kuis, serta alur kerja Admin untuk mengelola data soal.
+#### **3.1.2 Deployment Diagram**
+Deployment Diagram di bawah memetakan penempatan fisik komponen perangkat lunak (klien browser, Laravel web server, MySQL database) ke dalam node perangkat keras beserta protokol komunikasinya:
+
+```mermaid
+graph TD
+    subgraph ClientNode ["Client Node (User Machine)"]
+        Browser["Web Browser (Chrome/Firefox/Safari)"]
+    end
+
+    subgraph ServerNode ["Application Server Node (Laragon / Web Server)"]
+        WebServer["Apache / Nginx Web Server"]
+        PHPEngine["PHP 8.2 Runtime Engine"]
+        LaravelApp["Laravel 12 Application Framework Code"]
+        
+        WebServer -- meneruskan request --> PHPEngine
+        PHPEngine -- menjalankan --> LaravelApp
+    end
+
+    subgraph DatabaseNode ["Database Server Node (MySQL Server)"]
+        MySQLInstance["MySQL Database Engine (Port 3306)"]
+        Schema["Schema (proyek1mindclash)"]
+        
+        MySQLInstance -- mengelola --> Schema
+    end
+
+    Browser -- "HTTP / HTTPS Requests (Port 80/443)" --> WebServer
+    LaravelApp -- "PDO / SQL Queries (TCP Port 3306)" --> MySQLInstance
+```
+
+### **3.2 Use Case & Workflow Sistem**
+
+#### **3.2.1 Use Case Diagram**
+Use Case Diagram di bawah menggambarkan interaksi aktor (Siswa dan Admin) dengan fitur-fitur utama sistem MindClash, termasuk modul multiplayer room:
+
+```mermaid
+graph LR
+    subgraph Aktor ["Aktor Sistem"]
+        Siswa((Siswa))
+        Admin((Admin))
+    end
+
+    subgraph UseCases ["MindClash Use Cases"]
+        UC1(Registrasi & Login)
+        UC2(Pilih Kategori Kuis)
+        UC3(Kerjakan Kuis Mandiri)
+        UC4(Tinjau Ulasan & Hasil)
+        UC5(Lihat Leaderboard Kelas)
+        UC6(Akses Multiplayer Room)
+        UC7(Kerjakan Kuis Bersama)
+        UC8(Lihat Leaderboard Room)
+        
+        UC9(Kelola Soal CRUD)
+        UC10(Kelola Kategori CRUD)
+        UC11(Pantau Aktivitas Sesi)
+        UC12(Cetak Laporan PDF)
+    end
+
+    Siswa --> UC1
+    Siswa --> UC2
+    Siswa --> UC3
+    Siswa --> UC4
+    Siswa --> UC5
+    Siswa --> UC6
+    Siswa --> UC7
+    Siswa --> UC8
+
+    Admin --> UC1
+    Admin --> UC9
+    Admin --> UC10
+    Admin --> UC11
+    Admin --> UC12
+```
+
+#### **3.2.2 Alur Kerja (Workflow) Sistem**
+Berikut merupakan alur kerja (workflow) utama sistem untuk aktor Siswa saat mengerjakan kuis, alur kerja Admin untuk mengelola data soal, serta alur kerja kuis berkelompok (*Multiplayer Room*).
 
 #### **A. Workflow Pengerjaan Kuis oleh Siswa**
 ```mermaid
@@ -366,14 +444,34 @@ flowchart TD
     Aksi -- Tambah Soal --> FormTambah[Isi Form Soal & Pilihan Jawaban] --> SimpanDb[Simpan ke Database]
     Aksi -- Lihat Soal --> TampilDaftar[Tampilkan Daftar Soal & Kategori]
     Aksi -- Edit Soal --> FormEdit[Ubah Data Soal] --> SimpanDb
-    Aksi -- Hapus Soal --> KonfirmasiHapus[Konfirmasi Hapus] --> HapusDb[Hapus dari Database]
-    SimpanDb --> SelesaiDb([Data Terupdate])
-    HapusDb --> SelesaiDb
-    SelesaiDb --> TampilDaftar
+    Aksi -- Hapus Soal --> HapusDb[Hapus dari Database]
+    SimpanDb --> TampilDaftar
+    HapusDb --> TampilDaftar
+```
+
+#### **C. Workflow Kuis Bersama (Multiplayer Room)**
+```mermaid
+flowchart TD
+    Start([Mulai]) --> Login{Sudah Login?}
+    Login -- Belum --> HalamanLogin[Halaman Login] --> Autentikasi[Autentikasi Akun] --> Home[Dashboard Siswa]
+    Login -- Ya --> Home
+    Home --> PilihMultiplayer[Masuk Menu Multiplayer Room]
+    PilihMultiplayer --> TipeAksi{Aksi Pengguna?}
+    TipeAksi -- Buat Room --> FormBuat[Input Nama Room & Pilih Kategori] --> ServerBuat[Server Buat Room & Kode Unik] --> LobbyHost[Masuk Lobby sebagai Host]
+    TipeAksi -- Gabung Room --> FormKode[Input Kode Room] --> CekKode{Kode Room Valid?}
+    CekKode -- Tidak --> FormKode
+    CekKode -- Ya --> ServerJoin[Server Catat RoomUser] --> LobbyMember[Masuk Lobby sebagai Anggota]
+    LobbyHost --> PantauPemain[Pantau Daftar Pemain di Lobby] --> TombolMulai{Klik Mulai Kuis? - Hanya Host}
+    LobbyMember --> TungguMulai[Tunggu Host Memulai Kuis] --> DeteksiMulai{Kuis Dimulai?}
+    DeteksiMulai -- Ya --> HalamanKuis[Tampil Soal & Timer Room]
+    TombolMulai -- Ya --> HalamanKuis
+    HalamanKuis --> IsiJawaban[Jawab Pilihan Ganda secara Simultan] --> SelesaiRoom[Kirim Jawaban / Waktu Habis]
+    SelesaiRoom --> ServerSkor[Server Hitung Skor & Simpan ke Hasil Kuis dengan room_id]
+    ServerSkor --> LeaderboardRoom[Tampilkan Peringkat Real-time Khusus Room tersebut] --> End([Selesai])
 ```
 
 ### **3.3 Class Diagram**
-Class Diagram berikut menunjukkan struktur model Eloquent pada aplikasi MindClash yang menangani representasi data dan relasi antar entitas.
+Class Diagram berikut menunjukkan struktur model Eloquent pada aplikasi MindClash yang menangani representasi data dan relasi antar entitas, termasuk penambahan modul multiplayer.
 
 ```mermaid
 classDiagram
@@ -389,6 +487,8 @@ classDiagram
         +timestamp updated_at
         +isAdmin() bool
         +quizResults() HasMany
+        +roomsHosted() HasMany
+        +joinedRooms() BelongsToMany
     }
 
     class Category {
@@ -400,6 +500,7 @@ classDiagram
         +timestamp updated_at
         +questions() HasMany
         +quizResults() HasMany
+        +rooms() HasMany
     }
 
     class Question {
@@ -420,6 +521,7 @@ classDiagram
         +int id
         +int user_id
         +int category_id
+        +int room_id
         +int total_questions
         +int correct_answers
         +int score
@@ -428,21 +530,57 @@ classDiagram
         +timestamp updated_at
         +user() BelongsTo
         +category() BelongsTo
+        +room() BelongsTo
+    }
+
+    class Room {
+        +int id
+        +string code
+        +string name
+        +int host_id
+        +int category_id
+        +string status
+        +timestamp created_at
+        +timestamp updated_at
+        +host() BelongsTo
+        +category() BelongsTo
+        +users() BelongsToMany
+        +results() HasMany
+    }
+
+    class RoomUser {
+        +int id
+        +int room_id
+        +int user_id
+        +timestamp created_at
+        +timestamp updated_at
+        +room() BelongsTo
+        +user() BelongsTo
     }
 
     User "1" --> "0..*" QuizResult : memiliki
     Category "1" --> "0..*" Question : memiliki
     Category "1" --> "0..*" QuizResult : memiliki
+    User "1" --> "0..*" Room : host_room
+    Category "1" --> "0..*" Room : kategori_room
+    Room "1" --> "0..*" RoomUser : memiliki
+    User "1" --> "0..*" RoomUser : bergabung
+    Room "1" --> "0..*" QuizResult : mencakup
 ```
 
 ### **3.4 Entity Relationship Diagram (ERD)**
-ERD berikut memetakan struktur tabel database relasional beserta tipe data, primary key (PK), foreign key (FK), dan kardinalitas antar tabel pada database MindClash.
+ERD berikut memetakan struktur tabel database relasional beserta tipe data, primary key (PK), foreign key (FK), dan kardinalitas antar tabel pada database MindClash dengan integrasi multiplayer rooms.
 
 ```mermaid
 erDiagram
     USERS ||--o{ QUIZ_RESULTS : "mengerjakan"
     CATEGORIES ||--o{ QUESTIONS : "memiliki"
     CATEGORIES ||--o{ QUIZ_RESULTS : "memiliki"
+    USERS ||--o{ ROOMS : "host"
+    CATEGORIES ||--o{ ROOMS : "memiliki"
+    ROOMS ||--o{ ROOM_USERS : "memiliki"
+    USERS ||--o{ ROOM_USERS : "bergabung"
+    ROOMS ||--o{ QUIZ_RESULTS : "memuat"
 
     USERS {
         bigint_unsigned id PK
@@ -483,10 +621,30 @@ erDiagram
         bigint_unsigned id PK
         bigint_unsigned user_id FK
         bigint_unsigned category_id FK
+        bigint_unsigned room_id FK "Nullable"
         int total_questions
         int correct_answers
         int score
-        text answers "JSON format"
+        text answers
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ROOMS {
+        bigint_unsigned id PK
+        varchar_255 code UK
+        varchar_255 name
+        bigint_unsigned host_id FK
+        bigint_unsigned category_id FK
+        varchar_255 status
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ROOM_USERS {
+        bigint_unsigned id PK
+        bigint_unsigned room_id FK
+        bigint_unsigned user_id FK
         timestamp created_at
         timestamp updated_at
     }
@@ -522,10 +680,26 @@ Setiap tabel dalam database MindClash memiliki tipe data yang disesuaikan dengan
    - `id` (`bigint unsigned`, Primary Key, Auto Increment): Identitas sesi hasil pengerjaan kuis.
    - `user_id` (`bigint unsigned`, Foreign Key): Menghubungkan riwayat kuis ke pengguna di tabel `users` dengan aturan `ON DELETE CASCADE`.
    - `category_id` (`bigint unsigned`, Foreign Key): Menghubungkan riwayat kuis ke tabel `categories` dengan aturan `ON DELETE CASCADE`.
+   - `room_id` (`bigint unsigned`, Foreign Key, Nullable): Menghubungkan riwayat kuis ke tabel `rooms` jika kuis dikerjakan melalui Multiplayer Room. Bernilai NULL untuk kuis belajar mandiri (single player).
    - `total_questions` (`int`): Menyimpan jumlah total soal kuis yang dikerjakan.
    - `correct_answers` (`int`): Menyimpan jumlah jawaban siswa yang bernilai benar.
    - `score` (`int`): Nilai akhir kuis siswa dalam skala 0 hingga 100.
    - `answers` (`text`, Nullable): Menyimpan struktur data JSON dari jawaban yang dipilih siswa (format pemetaan: `id_soal => pilihan_jawaban`) untuk keperluan peninjauan kembali (*review*).
+
+5. **Tabel `rooms`:**
+   - `id` (`bigint unsigned`, Primary Key, Auto Increment): Identitas unik untuk multiplayer kuis room.
+   - `code` (`varchar(255)`, Unique): Menyimpan string token kode acak unik (contoh: "ROOM12A") yang dibagikan host agar anggota lain dapat bergabung.
+   - `name` (`varchar(255)`): Nama room kuis yang diatur oleh host (contoh: "Cerdas Cermat Kelas 7A").
+   - `host_id` (`bigint unsigned`, Foreign Key): Menghubungkan room ke pembuat room (`users.id`) dengan aturan `ON DELETE CASCADE`.
+   - `category_id` (`bigint unsigned`, Foreign Key): Menghubungkan kuis room ke tabel `categories` dengan aturan `ON DELETE CASCADE`.
+   - `status` (`varchar(255)`, Default 'waiting'): Menyimpan status berjalan kuis: "waiting" (di lobby), "active" (kuis berjalan), dan "finished" (selesai).
+   - `created_at` & `updated_at` (`timestamp`, Nullable): Waktu pembuatan dan pembaruan data otomatis.
+
+6. **Tabel `room_users` (Pivot Table):**
+   - `id` (`bigint unsigned`, Primary Key, Auto Increment): Identitas unik entri pivot.
+   - `room_id` (`bigint unsigned`, Foreign Key): Merujuk ke tabel `rooms.id` dengan aturan `ON DELETE CASCADE`.
+   - `user_id` (`bigint unsigned`, Foreign Key): Merujuk ke tabel `users.id` dengan aturan `ON DELETE CASCADE` untuk menyimpan daftar siswa di dalam room.
+   - `created_at` & `updated_at` (`timestamp`, Nullable): Waktu pencatatan bergabung pemain.
 
 #### **B. Penjelasan Hubungan Relasi (Cardinality) ERD**
 Hubungan relasional antar entitas dalam database MindClash didasarkan pada aturan bisnis dan integritas data sebagai berikut:
@@ -538,6 +712,15 @@ Hubungan relasional antar entitas dalam database MindClash didasarkan pada atura
 3. **Hubungan `categories` ke `quiz_results` (One-to-Many / 1:N):**
    * **Logika:** Satu kategori kuis (`categories`) dapat dikerjakan dalam banyak sesi ujian oleh berbagai siswa sehingga melahirkan banyak data hasil kuis (`quiz_results`). Di sisi lain, setiap satu rekaman hasil kuis (`quiz_results`) hanya merujuk pada satu kategori kuis yang dikerjakan siswa pada sesi tersebut.
    * **Kardinalitas:** `CATEGORIES (1) <--- memiliki ---> (0..*) QUIZ_RESULTS`.
+4. **Hubungan `users` ke `rooms` (One-to-Many / 1:N):**
+   * **Logika:** Satu pengguna (`users`) dapat membuat dan bertindak sebagai host di banyak multiplayer kuis room (`rooms`) secara terpisah. Sementara itu, setiap satu kuis room hanya dikelola oleh satu orang Host pembuat.
+   * **Kardinalitas:** `USERS (1) <--- mengelola/host ---> (0..*) ROOMS`.
+5. **Hubungan `rooms` ke `room_users` (1:N) dan `users` ke `room_users` (1:N) (Many-to-Many / M:N):**
+   * **Logika:** Satu kuis room (`rooms`) dapat menampung banyak siswa peserta (`users`) di lobby-nya, dan seorang siswa dapat bergabung ke beberapa kuis room yang berbeda. Hubungan Many-to-Many ini dihubungkan secara fisik oleh tabel pivot `room_users`.
+   * **Kardinalitas:** `ROOMS (1) <--- memuat ---> (0..*) ROOM_USERS` dan `USERS (1) <--- bergabung ---> (0..*) ROOM_USERS`.
+6. **Hubungan `rooms` ke `quiz_results` (One-to-Many / 1:N):**
+   * **Logika:** Satu multiplayer room (`rooms`) dapat menghasilkan banyak data rekap hasil kuis (`quiz_results`) dari masing-masing peserta yang tergabung di dalamnya. Sebaliknya, satu baris rekap hasil kuis Multiplayer hanya merujuk ke satu kuis room tertentu.
+   * **Kardinalitas:** `ROOMS (1) <--- memuat ---> (0..*) QUIZ_RESULTS`.
 
 ---
 <div style="page-break-after: always;"></div>
@@ -559,7 +742,7 @@ Berikut adalah desain antarmuka halaman masuk (*login page*) siswa dan admin:
 ![Mockup Halaman Login](report_images/login.png)
 
 #### **B. Halaman Utama Siswa (Dashboard)**
-Berikut adalah desain antarmuka dasbor utama siswa setelah berhasil masuk ke sistem:
+Berikut adalah desain antarmuka dasbor utama siswa setelah berhasil masuk ke sistem. Pada bagian menu atas halaman ini, berdampingan dengan tombol **Lihat Peringkat Kelas**, terdapat tombol akses **Mode Mabar (Rooms)** untuk masuk ke kuis berkelompok:
 ![Mockup Halaman Dashboard](report_images/dashboard.png)
 
 #### **C. Halaman Pengerjaan Kuis**
@@ -574,7 +757,7 @@ Berikut adalah desain antarmuka halaman peringkat siswa berdasarkan rata-rata ni
 Berikut adalah tampilan nyata (*screenshot* asli) dari antarmuka aplikasi web **MindClash** beserta rincian elemen penting yang disajikan:
 
 #### **A. Tampilan Halaman Dashboard Siswa**
-Dasbor utama menyajikan menu pemilihan kategori kuis secara visual dan ringkasan statistik belajar siswa:
+Dasbor utama menyajikan menu pemilihan kategori kuis secara visual, ringkasan statistik belajar siswa, serta tombol navigasi **Mode Mabar (Rooms)** yang terletak di samping kanan tombol **Lihat Peringkat Kelas**:
 ![Tampilan Dashboard Siswa](report_images/dashboard.png)
 
 #### **B. Tampilan Halaman Pengerjaan Kuis**
@@ -604,6 +787,10 @@ Tabel berikut menjelaskan fungsi lengkap dari setiap elemen antarmuka yang ada p
 | | Ringkasan Akurasi | Tabel Informasi | Menampilkan detail jumlah soal, jumlah jawaban benar, dan persentase keberhasilan. |
 | **Tinjau Jawaban (Review)**| Daftar Koreksi Soal | Panel List | Menampilkan seluruh soal kuis dengan penanda warna hijau untuk jawaban benar dan merah untuk jawaban salah. |
 | **Peringkat (Leaderboard)**| Tabel Peringkat Kelas | Tabel Data | Menampilkan peringkat siswa di kelas yang sama berdasarkan nilai rata-rata tertinggi kuis secara real-time. |
+| **Multiplayer Rooms (Index)**| Panel pencarian/daftar room kuis | Form & Tombol | Menyediakan form pembuatan room kuis baru dan input kode room unik untuk masuk room. |
+| **Lobby Room** | Panel ruang tunggu kuis | List Pemain | Menampilkan daftar siswa yang telah bergabung, kode room, detail kategori kuis, dan tombol "Mulai Kuis" untuk host. |
+| **Kuis Room** | Antarmuka kuis simultan | Soal & Timer | Menampilkan butir soal kuis dengan batas waktu room secara bersamaan dengan siswa lainnya. |
+| **Leaderboard Room** | Tabel peringkat khusus room | Tabel Data | Menampilkan peringkat nilai kuis dari para siswa di dalam room tersebut secara langsung setelah kuis selesai. |
 
 ---
 <div style="page-break-after: always;"></div>
@@ -620,7 +807,7 @@ Pengembangan aplikasi **MindClash** didasarkan pada teknologi modern berbasis we
 6. **Server & Tools Pengembangan:** Laragon / XAMPP (Local Web Server), Node.js (untuk kompilasi aset frontend via Vite), Composer (PHP Dependency Manager), Visual Studio Code (IDE), dan Git (Version Control System).
 
 ### **5.2 Struktur Folder Proyek**
-Berikut susunan folder penting pada proyek Laravel MindClash yang merepresentasikan arsitektur aplikasi:
+Berikut susunan folder penting pada proyek Laravel MindClash yang merepresentasikan arsitektur aplikasi (termasuk modul multiplayer):
 
 ```
 proyek1Mindclash/
@@ -633,12 +820,15 @@ proyek1Mindclash/
 │   │       ├── CategoryController.php  <-- CRUD kategori kuis oleh Admin
 │   │       ├── DashboardController.php <-- Statistik ringkas admin dasbor
 │   │       ├── ReportController.php    <-- Logika export PDF & laporan admin
-│   │       └── SettingController.php   <-- Pembaruan profil admin & siswa
+│   │       ├── SettingController.php   <-- Pembaruan profil admin & siswa
+│   │       └── RoomController.php      <-- Logika pembuatan, lobby, & kuis Multiplayer Room
 │   └── Models/                        <-- Definisi database entity (Eloquent)
 │       ├── User.php
 │       ├── Category.php
 │       ├── Question.php
-│       └── QuizResult.php
+│       ├── QuizResult.php
+│       ├── Room.php                    <-- Model tabel rooms kuis bersama
+│       └── RoomUser.php                <-- Model pivot tabel room_users peserta
 ├── bootstrap/                         <-- Konfigurasi inisialisasi Laravel
 ├── config/                            <-- Berkas pengaturan global (session, database, dll)
 ├── database/
@@ -658,8 +848,9 @@ proyek1Mindclash/
 │       ├── layouts/                   <-- Template layout induk admin & user
 │       ├── questions/                 <-- View CRUD pertanyaan
 │       └── user/                      <-- View dashboard kuis, hasil kuis, & leaderboard
+│           └── rooms/                 <-- Sub-folder view kuis bersama (index, lobby, quiz, leaderboard)
 ├── routes/
-│   └── web.php                        <-- Seluruh rute aplikasi (admin & user)
+│   └── web.php                        <-- Seluruh rute aplikasi (admin, user, & room)
 ├── composer.json                      <-- Daftar pustaka PHP dependensi proyek
 ├── package.json                       <-- Daftar pustaka JavaScript dependensi proyek
 └── vite.config.js                     <-- Konfigurasi build tools Vite
@@ -733,8 +924,8 @@ Ikuti langkah-langkah di bawah ini untuk memasang dan menjalankan aplikasi MindC
 ### **6.1 Kesimpulan**
 Berdasarkan seluruh tahapan perancangan, pengembangan, dan uji coba yang dilakukan, proyek pengembangan aplikasi **MindClash** berhasil diselesaikan sepenuhnya dan menarik beberapa kesimpulan sebagai berikut:
 1. Proyek ini berhasil mewujudkan sebuah solusi pembelajaran interaktif berbasis web (*gamified learning platform*) yang dirancang khusus untuk meningkatkan motivasi, keterlibatan aktif, dan kemandirian belajar siswa tingkat sekolah menengah.
-2. Fitur-fitur utama seperti pengelompokan kuis berdasarkan kategori mata pelajaran, pembatasan waktu pengerjaan (timer), tampilan visual yang dinamis tanpa muat ulang halaman, serta kalkulasi nilai otomatis berhasil diimplementasikan dengan baik menggunakan kolaborasi framework PHP Laravel 12 dan JavaScript vanilla.
-3. Fitur gamifikasi penunjang seperti *Leaderboard* kelas terbukti dapat disajikan secara real-time berdasarkan rata-rata nilai siswa di kelas yang sama, memicu atmosfer kompetitif akademis yang sehat di kalangan siswa.
+2. Fitur-fitur utama seperti pengelompokan kuis berdasarkan kategori mata pelajaran, pembatasan waktu pengerjaan (timer), tampilan visual yang dinamis tanpa muat ulang halaman, kalkulasi nilai otomatis, serta **multiplayer room kuis** berkelompok berhasil diimplementasikan dengan baik menggunakan kolaborasi framework PHP Laravel 12 dan JavaScript vanilla.
+3. Fitur gamifikasi penunjang seperti *Leaderboard* kelas dan *Room Leaderboard* terbukti dapat disajikan secara real-time berdasarkan hasil kuis siswa sekelas/se-room, memicu atmosfer kompetitif akademis yang sehat di kalangan siswa.
 4. Fitur administrasi seperti manajemen data soal (CRUD), pengaturan profil, dan ekspor laporan nilai ke dalam format PDF berhasil mempermudah tugas guru dalam melakukan evaluasi hasil belajar siswa secara periodik.
 
 Secara keseluruhan, tujuan pengembangan aplikasi MindClash telah tercapai 100%, menghasilkan aplikasi web yang fungsional, responsif, dan memiliki estetika desain gelap (Dark Mode) modern yang memikat bagi segmen pengguna pelajar digital saat ini.
@@ -743,7 +934,7 @@ Secara keseluruhan, tujuan pengembangan aplikasi MindClash telah tercapai 100%, 
 Meskipun sistem telah berjalan dengan baik, terdapat beberapa aspek yang dapat ditingkatkan pada pengembangan aplikasi MindClash selanjutnya:
 1. **Penerapan Sistem Nyawa (Survival Mode) Sebenarnya:** Mengembangkan skema basis data tambahan untuk memfasilitasi "Sistem Nyawa" sesungguhnya di mana sesi kuis siswa akan langsung berhenti secara otomatis jika menjawab salah sebanyak 3 kali (sesuai ide dasar awal di Bab 1).
 2. **Sistem Lencana (*Badges*) Dinamis:** Mengintegrasikan pencapaian lencana siswa ke dalam database secara otomatis berdasarkan rekor tertentu (misal: "100 Score Badge", "Speed Runner Badge").
-3. **Fitur Duel/Battle Real-Time:** Menambahkan protokol WebSocket (seperti Laravel Reverb atau Pusher) untuk memungkinkan siswa melakukan kompetisi cerdas cermat satu lawan satu secara langsung (*real-time multiplayer duel*) untuk meningkatkan intensitas gamifikasi.
+3. **Penerapan Protocol WebSocket secara Penuh:** Mengintegrasikan Laravel Reverb atau Pusher pada fitur multiplayer room kuis untuk mengirimkan pembaruan data secara langsung (*push-based real-time notification*) pada ruang lobby saat ada pemain bergabung atau keluar tanpa memerlukan pemuatan ulang halaman secara periodik (*client polling*).
 4. **Analisis Statistik Siswa Lanjutan:** Menambahkan antarmuka grafik perkembangan skor kuis siswa dari waktu ke waktu pada dasbor siswa untuk memfasilitasi evaluasi diri (*self-monitoring*).
 5. **Mobile Application (PWA):** Mengembangkan aplikasi ke dalam bentuk Progressive Web App (PWA) agar siswa dapat mengakses kuis dengan mudah di perangkat ponsel pintar mereka layaknya aplikasi native.
 

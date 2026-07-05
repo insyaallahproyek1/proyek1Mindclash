@@ -1015,11 +1015,11 @@
         <h2>1.4 Ruang Lingkup</h2>
         <ol>
             <li><strong>Fokus Penelitian:</strong> Penelitian ini berfokus pada pengembangan sistem informasi kuis pembelajaran interaktif berbasis web yang diberi nama MindClash, dengan sub-tema "Solusi Pembelajaran Interaktif Saat Ini Melalui Pendekatan Gamifikasi yang Intensif". Penelitian ini bertujuan untuk menyediakan media evaluasi dan pembelajaran mandiri secara asinkron yang mendalam bagi siswa, dengan mengimplementasikan arsitektur monolitik terstruktur menggunakan teknologi PHP sebagai backend (pengelola logika bisnis dan basis data relasional) serta Blade dan JavaScript vanilla sebagai frontend (antarmuka pengguna yang responsif).</li>
-            <li><strong>Batasan Sistem MindClash:</strong> Sistem ini dirancang untuk mengintegrasikan elemen gamifikasi intensif yang mencakup fitur sistem nyawa (mode bertahan hidup), umpan balik langsung berupa penjelasan konteks setelah setiap soal, pengelolaan papan peringkat (leaderboard), dan pencapaian lencana (badges). Cakupan pengembangan sistem ini terbatas pada platform aplikasi web dan tidak mencakup pengembangan aplikasi mobile. Selain itu, sistem ini difokuskan pada metode belajar mandiri, sehingga tidak memfasilitasi fitur multipemain langsung secara langsung (real-time multiplayer antar-pengguna).</li>
+            <li><strong>Batasan Sistem MindClash:</strong> Sistem ini dirancang untuk mengintegrasikan elemen gamifikasi intensif yang mencakup fitur sistem nyawa (mode bertahan hidup), umpan balik langsung berupa penjelasan konteks setelah setiap soal, pengelolaan papan peringkat (leaderboard), pencapaian lencana (badges), serta <strong>multiplayer room kuis</strong> untuk pengerjaan kuis bersama secara kelompok. Cakupan pengembangan sistem ini terbatas pada platform aplikasi web dan tidak mencakup pengembangan aplikasi mobile.</li>
             <li><strong>Aktor Sistem:</strong> Pengguna yang terlibat di dalam sistem ini dibatasi pada 2 (dua) peran utama dengan hak akses sebagai berikut:
                 <ul>
                     <li><strong>Admin:</strong> Pihak yang bertanggung jawab penuh dalam mengelola seluruh data sistem melalui fitur CRUD (Buat, Baca, Perbarui, dan Hapus), yang meliputi manajemen data soal kuis, pemantauan riwayat sesi permainan, pengelolaan akumulasi skor papan peringkat, serta pengaturan pencapaian lencana.</li>
-                    <li><strong>Siswa (Pengguna):</strong> Pengguna yang memanfaatkan platform secara mandiri untuk mengakses kuis, memilih mode bertahan hidup, menerima umpan balik/penjelasan konteks soal, melihat peringkat pada leaderboard, serta melacak lencana pencapaian yang telah diperoleh.</li>
+                    <li><strong>Siswa (Pengguna):</strong> Pengguna yang memanfaatkan platform untuk mengakses kuis mandiri (mode bertahan hidup), bergabung/membuat <strong>multiplayer room</strong> untuk bermain bersama teman sekelas, menerima umpan balik/penjelasan konteks soal, melihat peringkat pada leaderboard, serta melacak lencana pencapaian yang telah diperoleh.</li>
                 </ul>
             </li>
         </ol>
@@ -1124,7 +1124,9 @@
     <div class="page-break">
         <h1>BAB 3: PERANCANGAN SISTEM</h1>
         
-        <h2>3.1 Arsitektur Sistem</h2>
+        <h2>3.1 Arsitektur & Deployment Sistem</h2>
+        
+        <h3>3.1.1 Arsitektur Sistem</h3>
         <p>Aplikasi <strong>MindClash</strong> menggunakan pola arsitektur <strong>Model-View-Controller (MVC)</strong> yang ditawarkan oleh framework Laravel. Sistem ini dikembangkan secara monolitik modern, di mana backend dan frontend terintegrasi dalam satu repositori namun dipisahkan secara logis. Komunikasi antara frontend (klien) dan backend (server) dilakukan melalui protokol HTTP/HTTPS.</p>
         <p>Berikut adalah diagram hubungan arsitektur sistem MindClash:</p>
         
@@ -1138,10 +1140,81 @@
             <div class="diagram-node">Database Layer<br><span style="font-size: 11px; font-weight: normal; color: var(--text-muted);">MySQL / SQLite</span></div>
         </div>
 
-        <h2>3.2 Workflow Sistem</h2>
-        <p>Workflow utama sistem menggambarkan langkah-langkah penggunaan aplikasi dari sudut pandang Siswa (saat pengerjaan kuis) dan Admin (saat mengelola soal).</p>
+        <h3>3.1.2 Deployment Diagram</h3>
+        <p>Deployment Diagram di bawah memetakan penempatan fisik komponen perangkat lunak (klien browser, Laravel web server, MySQL database) ke dalam node perangkat keras beserta protokol komunikasinya:</p>
+        <div class="mermaid" style="background: #111827; border-radius: 8px; padding: 20px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+            graph TD
+                subgraph ClientNode ["Client Node (User Machine)"]
+                    Browser["Web Browser (Chrome/Firefox/Safari)"]
+                end
+
+                subgraph ServerNode ["Application Server Node (Laragon / Web Server)"]
+                    WebServer["Apache / Nginx Web Server"]
+                    PHPEngine["PHP 8.2 Runtime Engine"]
+                    LaravelApp["Laravel 12 Application Framework Code"]
+                    
+                    WebServer -- meneruskan request --> PHPEngine
+                    PHPEngine -- menjalankan --> LaravelApp
+                end
+
+                subgraph DatabaseNode ["Database Server Node (MySQL Server)"]
+                    MySQLInstance["MySQL Database Engine (Port 3306)"]
+                    Schema["Schema (proyek1mindclash)"]
+                    
+                    MySQLInstance -- mengelola --> Schema
+                end
+
+                Browser -- "HTTP / HTTPS Requests (Port 80/443)" --> WebServer
+                LaravelApp -- "PDO / SQL Queries (TCP Port 3306)" --> MySQLInstance
+        </div>
+
+        <h2>3.2 Use Case & Workflow Sistem</h2>
+
+        <h3>3.2.1 Use Case Diagram</h3>
+        <p>Use Case Diagram di bawah menggambarkan hubungan interaksi antara aktor (Siswa dan Admin) dengan fungsionalitas sistem kuis MindClash (termasuk fitur multiplayer room):</p>
+        <div class="mermaid" style="background: #111827; border-radius: 8px; padding: 20px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+            graph LR
+                subgraph Aktor ["Aktor Sistem"]
+                    Siswa((Siswa))
+                    Admin((Admin))
+                end
+
+                subgraph UseCases ["MindClash Use Cases"]
+                    UC1(Registrasi & Login)
+                    UC2(Pilih Kategori Kuis)
+                    UC3(Kerjakan Kuis Mandiri)
+                    UC4(Tinjau Ulasan & Hasil)
+                    UC5(Lihat Leaderboard Kelas)
+                    UC6(Akses Multiplayer Room)
+                    UC7(Kerjakan Kuis Bersama)
+                    UC8(Lihat Leaderboard Room)
+                    
+                    UC9(Kelola Soal CRUD)
+                    UC10(Kelola Kategori CRUD)
+                    UC11(Pantau Aktivitas Sesi)
+                    UC12(Cetak Laporan PDF)
+                end
+
+                Siswa --> UC1
+                Siswa --> UC2
+                Siswa --> UC3
+                Siswa --> UC4
+                Siswa --> UC5
+                Siswa --> UC6
+                Siswa --> UC7
+                Siswa --> UC8
+
+                Admin --> UC1
+                Admin --> UC9
+                Admin --> UC10
+                Admin --> UC11
+                Admin --> UC12
+        </div>
+
+        <h3>3.2.2 Alur Kerja (Workflow) Sistem</h3>
+        <p>Workflow utama sistem menggambarkan langkah-langkah penggunaan aplikasi dari sudut pandang Siswa (saat pengerjaan kuis mandiri dan kuis bersama di Multiplayer Room) serta Admin (saat mengelola soal).</p>
         
-        <h3>Workflow Pengerjaan Kuis Siswa:</h3>
+        <h4 style="color: var(--primary-light); font-size: 15px; margin-top: 15px;">A. Workflow Pengerjaan Kuis Mandiri Siswa:</h4>
         <ol>
             <li>Siswa mengakses halaman login, memasukkan email dan password terdaftar.</li>
             <li>Setelah otentikasi berhasil, siswa diarahkan ke Halaman Dashboard Utama Siswa yang berisi grafik ringkasan nilai, total kuis yang telah dikerjakan, dan lencana kategori.</li>
@@ -1153,10 +1226,21 @@
             <li>Siswa dapat melihat ulasan jawaban secara mendalam pada halaman review untuk mengetahui pembahasan soal yang salah.</li>
         </ol>
 
+        <h4 style="color: var(--primary-light); font-size: 15px; margin-top: 15px;">B. Workflow Kuis Bersama (Multiplayer Room):</h4>
+        <ol>
+            <li>Siswa masuk ke menu "Multiplayer Room" pada Halaman Dashboard Utama.</li>
+            <li>Siswa dapat memilih untuk **Buat Room Baru** (bertindak sebagai Host dengan memasukkan nama room dan memilih kategori kuis) atau **Gabung Room** (memasukkan kode room unik yang dibagikan oleh host).</li>
+            <li>Setelah room berhasil dibuat atau dimasuki, siswa diarahkan ke ruang tunggu (*Lobby Room*) untuk memantau daftar peserta yang telah bergabung.</li>
+            <li>Saat seluruh peserta telah siap, Host menekan tombol "Mulai Kuis". Sistem akan merender halaman kuis secara simultan untuk seluruh peserta di room tersebut.</li>
+            <li>Seluruh siswa menjawab soal kuis secara bersamaan dengan batas waktu yang ditentukan.</li>
+            <li>Setelah kuis selesai, nilai akhir kuis siswa akan disimpan ke database dengan mengasosiasikannya ke `room_id` terkait.</li>
+            <li>Siswa diarahkan langsung ke halaman **Leaderboard Room** untuk memantau peringkat skor kuis di dalam room tersebut secara real-time.</li>
+        </ol>
+
         <h2>3.3 Class Diagram</h2>
-        <p>Class diagram di bawah menggambarkan relasi antar model data inti dalam sistem MindClash:</p>
+        <p>Class diagram di bawah menggambarkan relasi antar model data inti dalam sistem MindClash, termasuk penambahan modul multiplayer:</p>
         
-        <div class="card" style="font-family: monospace; font-size: 13px; color: #a78bfa; background: #090d16; border: 1px solid var(--primary);">
+        <div class="card" style="font-family: monospace; font-size: 13px; color: #a78bfa; background: #090d16; border: 1px solid var(--primary); padding: 15px; border-radius: 6px; margin-bottom: 20px; line-height: 1.5;">
             <strong>User</strong><br>
             - id: int<br>
             - name: string<br>
@@ -1164,6 +1248,8 @@
             - role: string ("admin" / "user")<br>
             - class: string (nullable)<br>
             + quizResults(): HasMany<br>
+            + roomsHosted(): HasMany<br>
+            + joinedRooms(): BelongsToMany<br>
             <br>
             <strong>Category</strong><br>
             - id: int<br>
@@ -1172,6 +1258,7 @@
             - time_limit: int<br>
             + questions(): HasMany<br>
             + quizResults(): HasMany<br>
+            + rooms(): HasMany<br>
             <br>
             <strong>Question</strong><br>
             - id: int<br>
@@ -1185,12 +1272,33 @@
             - id: int<br>
             - user_id: int<br>
             - category_id: int<br>
+            - room_id: int (nullable)<br>
             - total_questions: int<br>
             - correct_answers: int<br>
             - score: int<br>
             - answers: array (JSON)<br>
             + user(): BelongsTo<br>
-            + category(): BelongsTo
+            + category(): BelongsTo<br>
+            + room(): BelongsTo<br>
+            <br>
+            <strong>Room</strong><br>
+            - id: int<br>
+            - code: string (unique)<br>
+            - name: string<br>
+            - host_id: int<br>
+            - category_id: int<br>
+            - status: string<br>
+            + host(): BelongsTo<br>
+            + category(): BelongsTo<br>
+            + users(): BelongsToMany<br>
+            + results(): HasMany<br>
+            <br>
+            <strong>RoomUser</strong><br>
+            - id: int<br>
+            - room_id: int<br>
+            - user_id: int<br>
+            + room(): BelongsTo<br>
+            + user(): BelongsTo
         </div>
 
         <h2>3.4 Entity Relationship Diagram (ERD)</h2>
@@ -1199,6 +1307,11 @@
                 USERS ||--o{ QUIZ_RESULTS : "mengerjakan"
                 CATEGORIES ||--o{ QUESTIONS : "memiliki"
                 CATEGORIES ||--o{ QUIZ_RESULTS : "memiliki"
+                USERS ||--o{ ROOMS : "host"
+                CATEGORIES ||--o{ ROOMS : "memiliki"
+                ROOMS ||--o{ ROOM_USERS : "memiliki"
+                USERS ||--o{ ROOM_USERS : "bergabung"
+                ROOMS ||--o{ QUIZ_RESULTS : "memuat"
 
                 USERS {
                     bigint_unsigned id PK
@@ -1239,10 +1352,30 @@
                     bigint_unsigned id PK
                     bigint_unsigned user_id FK
                     bigint_unsigned category_id FK
+                    bigint_unsigned room_id FK "Nullable"
                     int total_questions
                     int correct_answers
                     int score
                     text answers
+                    timestamp created_at
+                    timestamp updated_at
+                }
+
+                ROOMS {
+                    bigint_unsigned id PK
+                    varchar_255 code UK
+                    varchar_255 name
+                    bigint_unsigned host_id FK
+                    bigint_unsigned category_id FK
+                    varchar_255 status
+                    timestamp created_at
+                    timestamp updated_at
+                }
+
+                ROOM_USERS {
+                    bigint_unsigned id PK
+                    bigint_unsigned room_id FK
+                    bigint_unsigned user_id FK
                     timestamp created_at
                     timestamp updated_at
                 }
@@ -1285,10 +1418,28 @@
                     <li><code>id</code> (<code>bigint unsigned</code>, PK): Identitas unik hasil pengerjaan kuis.</li>
                     <li><code>user_id</code> (<code>bigint unsigned</code>, FK): Merujuk ke tabel <code>users.id</code> (Cascade Delete).</li>
                     <li><code>category_id</code> (<code>bigint unsigned</code>, FK): Merujuk ke tabel <code>categories.id</code> (Cascade Delete).</li>
+                    <li><code>room_id</code> (<code>bigint unsigned</code>, FK, Nullable): Merujuk ke tabel <code>rooms.id</code> jika dikerjakan melalui Multiplayer Room. Bernilai NULL untuk kuis belajar mandiri (single player).</li>
                     <li><code>total_questions</code> (<code>int</code>): Jumlah butir soal kuis.</li>
                     <li><code>correct_answers</code> (<code>int</code>): Jumlah jawaban benar siswa.</li>
                     <li><code>score</code> (<code>int</code>): Nilai kuis akhir siswa skala 0-100.</li>
                     <li><code>answers</code> (<code>text</code>, Nullable): JSON data jawaban terpilih siswa (id_soal => jawaban) untuk diulas kembali.</li>
+                </ul>
+            </li>
+            <li style="margin-top: 10px;"><strong>Tabel <code>rooms</code>:</strong>
+                <ul>
+                    <li><code>id</code> (<code>bigint unsigned</code>, PK, Auto Increment): Identitas unik untuk kuis room berkelompok.</li>
+                    <li><code>code</code> (<code>varchar(255)</code>, Unique): Kode acak unik penanda room kuis untuk bergabung.</li>
+                    <li><code>name</code> (<code>varchar(255)</code>): Nama room kuis yang ditentukan host.</li>
+                    <li><code>host_id</code> (<code>bigint unsigned</code>, FK): Menghubungkan room ke pembuat room (Cascade Delete).</li>
+                    <li><code>category_id</code> (<code>bigint unsigned</code>, FK): Menghubungkan room ke kategori mata pelajaran kuis.</li>
+                    <li><code>status</code> (<code>varchar(255)</code>): Status kuis berjalan: "waiting", "active", "finished".</li>
+                </ul>
+            </li>
+            <li style="margin-top: 10px;"><strong>Tabel <code>room_users</code> (Pivot Table):</strong>
+                <ul>
+                    <li><code>id</code> (<code>bigint unsigned</code>, PK): Identitas unik entri pivot.</li>
+                    <li><code>room_id</code> (<code>bigint unsigned</code>, FK): Menghubungkan ke tabel <code>rooms.id</code>.</li>
+                    <li><code>user_id</code> (<code>bigint unsigned</code>, FK): Menghubungkan ke tabel <code>users.id</code>.</li>
                 </ul>
             </li>
         </ul>
@@ -1298,7 +1449,11 @@
             <li><strong>Relasi users ke quiz_results (One-to-Many / 1:N):</strong> Satu Siswa dapat memiliki banyak data riwayat hasil kuis karena diperbolehkan mengerjakan kuis berkali-kali. Namun, satu rekaman hasil kuis hanya dimiliki oleh tepat satu orang Siswa.</li>
             <li><strong>Relasi categories ke questions (One-to-Many / 1:N):</strong> Satu Kategori pelajaran memuat banyak butir pertanyaan soal di bank soal. Setiap butir soal hanya ditugaskan ke dalam satu Kategori pelajaran.</li>
             <li><strong>Relasi categories ke quiz_results (One-to-Many / 1:N):</strong> Satu Kategori kuis dapat dikerjakan dalam banyak sesi oleh berbagai siswa, namun satu rekaman hasil kuis hanya merujuk ke satu Kategori yang dikerjakan pada sesi itu.</li>
+            <li><strong>Relasi users ke rooms (One-to-Many / 1:N):</strong> Satu pengguna dapat membuat dan bertindak sebagai host di beberapa kuis room, namun satu kuis room hanya dikelola oleh satu orang Host pembuat.</li>
+            <li><strong>Relasi rooms ke room_users (1:N) dan users ke room_users (1:N) (Many-to-Many / M:N):</strong> Hubungan Banyak-ke-Banyak antara siswa peserta dan kuis room dijembatani oleh tabel pivot <code>room_users</code>.</li>
+            <li><strong>Relasi rooms ke quiz_results (One-to-Many / 1:N):</strong> Satu kuis room multiplayer memuat beberapa hasil kuis dari masing-masing peserta room.</li>
         </ul>
+    </div>
     </div>
 
     <!-- BAB 4: DESAIN ANTARMUKA -->
@@ -1316,7 +1471,7 @@
         <img src="report_images/login.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Mockup Halaman Login">
 
         <h3 style="color: var(--primary-light); font-size: 16px;">B. Halaman Dashboard Utama Siswa</h3>
-        <p>Desain dasbor utama siswa setelah berhasil masuk ke sistem:</p>
+        <p>Desain dasbor utama siswa setelah berhasil masuk ke sistem. Pada menu utama di halaman ini, berdampingan dengan tombol <strong>Lihat Peringkat Kelas</strong>, terdapat tombol akses cepat <strong>Mode Mabar (Rooms)</strong> untuk pengerjaan kuis kelompok secara simultan:</p>
         <img src="report_images/dashboard.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Mockup Halaman Dashboard">
 
         <h3 style="color: var(--primary-light); font-size: 16px;">C. Halaman Pengerjaan Kuis</h3>
@@ -1331,7 +1486,7 @@
         <p>Berikut adalah tampilan nyata (*screenshot* asli) dari antarmuka aplikasi web **MindClash** beserta rincian elemen penting yang disajikan:</p>
 
         <h3 style="color: var(--primary-light); font-size: 16px;">A. Tampilan Halaman Dashboard Siswa</h3>
-        <p>Dasbor utama menyajikan menu pemilihan kategori kuis secara visual dan ringkasan statistik belajar siswa:</p>
+        <p>Dasbor utama menyajikan menu pemilihan kategori kuis secara visual, ringkasan statistik belajar siswa, serta tombol navigasi <strong>Mode Mabar (Rooms)</strong> yang terletak di samping kanan tombol <strong>Lihat Peringkat Kelas</strong>:</p>
         <img src="report_images/dashboard.png" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" alt="Tampilan Dashboard Siswa">
 
         <h3 style="color: var(--primary-light); font-size: 16px;">B. Tampilan Halaman Pengerjaan Kuis</h3>
