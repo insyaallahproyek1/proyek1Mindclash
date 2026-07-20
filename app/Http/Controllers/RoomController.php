@@ -257,7 +257,10 @@ class RoomController extends Controller
             $room->update(['status' => 'finished']);
         }
 
-        return view('user.rooms.leaderboard', compact('room', 'results', 'membersCount'));
+        $questions = \App\Models\Question::where('category_id', $room->category_id)->get();
+        $myResult = $results->where('user_id', auth()->id())->first();
+
+        return view('user.rooms.leaderboard', compact('room', 'results', 'membersCount', 'questions', 'myResult'));
     }
 
     /**
