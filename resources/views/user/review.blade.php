@@ -231,6 +231,85 @@
         .percentage-fill.low {
             background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .result-card {
+                padding: 30px 15px;
+            }
+
+            .score-circle {
+                width: 140px;
+                height: 140px;
+                font-size: 40px;
+                margin-bottom: 20px;
+            }
+
+            .result-title {
+                font-size: 26px;
+            }
+
+            .result-message {
+                font-size: 15px;
+            }
+
+            .score-details {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .detail-box {
+                padding: 12px;
+            }
+
+            .detail-value {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-home, .btn-retry {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+
+            .review-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .question-review-item {
+                padding: 15px;
+            }
+
+            .review-question {
+                font-size: 14.5px;
+            }
+
+            .answer-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .answer-label {
+                width: auto;
+                font-size: 12px;
+            }
+
+            .answer-text {
+                font-size: 13.5px;
+            }
+        }
     </style>
 </head>
 <body>
