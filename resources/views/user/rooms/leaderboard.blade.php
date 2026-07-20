@@ -138,6 +138,88 @@
             font-weight: bold;
             font-size: 14px;
         }
+
+        /* Review Styles */
+        .questions-review {
+            margin-top: 30px;
+        }
+
+        .review-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: left;
+            color: #c4b5fd;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+            padding-bottom: 8px;
+        }
+
+        .question-review-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #8b5cf6;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .question-review-item.correct {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.03);
+        }
+
+        .question-review-item.incorrect {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.03);
+        }
+
+        .review-question {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .review-answer {
+            display: grid;
+            gap: 8px;
+        }
+
+        .answer-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13.5px;
+        }
+
+        .answer-label {
+            font-weight: bold;
+            width: 110px;
+            color: #cbd5e1;
+        }
+
+        .answer-text {
+            color: #e2e8f0;
+            flex: 1;
+        }
+
+        .answer-row.correct {
+            color: #10b981;
+        }
+
+        .answer-row.incorrect {
+            color: #ef4444;
+        }
+
+        .icon-correct {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .icon-incorrect {
+            color: #ef4444;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -246,6 +328,65 @@
             @endif
         </div>
     </div>
+
+    @if($myResult)
+    <div class="card-custom">
+        <h4 class="fw-bold mb-3 text-start"><i class="fas fa-file-signature text-info"></i> Pembahasan Jawaban Kamu</h4>
+        <div class="questions-review">
+            @php
+                $answers = $myResult->answers ?? [];
+            @endphp
+            @foreach($questions as $question)
+            @php
+                $userAnswer = $answers[$question->id] ?? null;
+                $isCorrect = $userAnswer === $question->correct_answer;
+            @endphp
+            <div class="question-review-item {{ $isCorrect ? 'correct' : 'incorrect' }}">
+                <div class="review-question">
+                    {{ $question->question_text }}
+                </div>
+                <div class="review-answer">
+                    <div class="answer-row">
+                        <span class="answer-label">Jawaban Kamu:</span>
+                        <span class="answer-text">
+                            @if($userAnswer)
+                                {{ $userAnswer }}. 
+                                @switch($userAnswer)
+                                    @case('A') {{ $question->option_a }} @break
+                                    @case('B') {{ $question->option_b }} @break
+                                    @case('C') {{ $question->option_c }} @break
+                                    @case('D') {{ $question->option_d }} @break
+                                @endswitch
+                            @else
+                                <em>Tidak dijawab / Kehabisan Waktu</em>
+                            @endif
+                        </span>
+                        <span class="{{ $isCorrect ? 'icon-correct' : 'icon-incorrect' }}">
+                            {{ $isCorrect ? '✓' : '✗' }}
+                        </span>
+                    </div>
+
+                    @if(!$isCorrect)
+                    <div class="answer-row correct">
+                        <span class="answer-label">Jawaban Benar:</span>
+                        <span class="answer-text">
+                            {{ $question->correct_answer }}.
+                            @switch($question->correct_answer)
+                                @case('A') {{ $question->option_a }} @break
+                                @case('B') {{ $question->option_b }} @break
+                                @case('C') {{ $question->option_c }} @break
+                                @case('D') {{ $question->option_d }} @break
+                            @endswitch
+                        </span>
+                        <span class="icon-correct">✓</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 
 <script>
