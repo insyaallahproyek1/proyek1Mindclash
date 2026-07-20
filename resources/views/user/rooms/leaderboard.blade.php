@@ -220,6 +220,97 @@
             color: #ef4444;
             font-weight: bold;
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .card-custom {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+
+            .leaderboard-container h1 {
+                font-size: 24px;
+            }
+
+            .rank-table th, .rank-table td {
+                padding: 12px 8px;
+                font-size: 13px;
+            }
+
+            .rank-number {
+                width: 35px;
+                font-size: 15px;
+            }
+
+            .score-value {
+                font-size: 15px;
+            }
+
+            .user-avatar-small {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+
+            .user-badge-container {
+                gap: 8px;
+            }
+
+            .user-badge-container .fw-bold {
+                font-size: 13px !important;
+            }
+
+            .user-badge-container .text-secondary {
+                font-size: 10px !important;
+            }
+
+            .d-flex.justify-content-between.align-items-center.mt-4 {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-back-home, .btn-finish-room, form {
+                width: 100%;
+            }
+
+            .btn-back-home, .btn-finish-room {
+                justify-content: center;
+                width: 100%;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .review-title {
+                font-size: 18px;
+            }
+
+            .question-review-item {
+                padding: 12px 15px;
+            }
+
+            .review-question {
+                font-size: 14px;
+            }
+
+            .answer-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .answer-label {
+                width: auto;
+                font-size: 12px;
+            }
+
+            .answer-text {
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
